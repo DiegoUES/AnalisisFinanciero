@@ -22,10 +22,11 @@ public class Activo {
     private String caracteristicas;
     private Date fechaCompra;
     private int vidaUtil;
-    private String estadoDelActivo;    // donado, vendido, votado
+    private Boolean estadoDelActivo;    // donado, vendido, votado
     private double precioAdquisicion;
     private Double precioUsado;        // puede ser null
     private String estadoDeCompra;     // nuevo/usado
+    private String descripcionEstado;
 
     public Activo() {
     }
@@ -110,13 +111,14 @@ public class Activo {
         this.vidaUtil = vidaUtil;
     }
 
-    public String getEstadoDelActivo() {
+    public Boolean getEstadoDelActivo() {
         return estadoDelActivo;
     }
 
-    public void setEstadoDelActivo(String estadoDelActivo) {
+    public void setEstadoDelActivo(Boolean estadoDelActivo) {
         this.estadoDelActivo = estadoDelActivo;
     }
+
 
     public double getPrecioAdquisicion() {
         return precioAdquisicion;
@@ -140,6 +142,14 @@ public class Activo {
 
     public void setEstadoDeCompra(String estadoDeCompra) {
         this.estadoDeCompra = estadoDeCompra;
+    }
+
+    public String getDescripcionEstado() {
+        return descripcionEstado;
+    }
+
+    public void setDescripcionEstado(String descripcionEstado) {
+        this.descripcionEstado = descripcionEstado;
     }
     
     
