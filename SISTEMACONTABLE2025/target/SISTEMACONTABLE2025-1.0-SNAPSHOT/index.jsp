@@ -79,11 +79,15 @@
                             <i class="bi bi-building me-2"></i> Instituciones
                         </a>
                     </li>
-                    
+                     <li class="nav-item">
+                        <a href="Usuarios.jsp" class="nav-link text-white">
+                            <i class="bi bi-building me-2"></i> Usuarios
+                        </a>
+                    </li>
                     <!-- Nuevo: enlace al módulo de activos -->
                     <li class="nav-item">
                         <a href="DepreciacionActivo.jsp" class="nav-link text-white">
-                            <i class="bi bi-box-seam me-2"></i> Activos fijos
+                            <i class="bi bi-box-seam me-2"></i>Depreciacion
                         </a>
                     </li>
 
