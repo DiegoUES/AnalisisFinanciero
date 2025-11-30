@@ -26,6 +26,8 @@ public class Activo {
     private double precioAdquisicion;
     private Double precioUsado;        // puede ser null
     private String estadoDeCompra;     // nuevo/usado
+    
+     private int aniosUso;//depreciacionaños
 
     public Activo() {
     }
@@ -142,6 +144,8 @@ public class Activo {
         this.estadoDeCompra = estadoDeCompra;
     }
     
-    
+    // *** depreciacion ***
+    public int getAniosUso() { return aniosUso; }
+    public void setAniosUso(int aniosUso) { this.aniosUso = aniosUso; }
 }
 
