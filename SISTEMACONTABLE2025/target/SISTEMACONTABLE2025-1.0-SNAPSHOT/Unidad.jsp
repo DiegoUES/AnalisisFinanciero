@@ -1,6 +1,6 @@
 <%-- 
-    Document   : Institucion
-    Created on : 25 nov 2025, 11:58:51 p. m.
+    Document   : Unidad
+    Created on : 29 nov 2025, 5:49:36 p. m.
     Author     : Marlo
 --%>
 
@@ -10,7 +10,7 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>Registrar Institución</title>
+        <title>Registrar Unidad</title>
 
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
@@ -41,7 +41,7 @@
 
             .layout-wrapper {
                 display: flex;
-                min-height: 100vh; /* Ocupa toda la altura */
+                min-height: 100vh;
             }
 
             #sidebar {
@@ -81,19 +81,20 @@
                             <i class="bi bi-house-door me-2"></i> Inicio
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a href="Institucion.jsp" class="nav-link active">
+                        <a href="Institucion.jsp" class="nav-link text-white">
                             <i class="bi bi-building me-2"></i> Instituciones
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a href="Unidad.jsp" class="nav-link">
-                            <i class="bi bi-building me-2"></i> Unidades
+                        <a href="Unidad.jsp" class="nav-link active">
+                            <i class="bi bi-diagram-3 me-2"></i> Unidades
                         </a>
                     </li>
-                    
+
+                    <!-- Aquí pueden agregar más opciones al menú -->
                 </ul>
             </nav>
             <!--FIN MENÚ LATERAL-->
@@ -110,47 +111,62 @@
                                         <div class="card-body">
 
                                             <h4 class="fw-bold py-3 mb-2">
-                                                <span class="text-muted fw-light">CRUD /</span> Instituciones
+                                                <span class="text-muted fw-light">CRUD /</span> Unidades
                                             </h4>
 
-                                            <div class="mb-3">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <button type="button"
-                                                        id="btn_nueva_institucion"
+                                                        id="btn_nueva_unidad"
                                                         class="btn btn-outline-primary">
-                                                    Nueva institución
+                                                    Nueva unidad
                                                 </button>
+
+                                                <div class="col-md-4">
+                                                    <input type="text" id="txtSearch" class="form-control"
+                                                           placeholder="Buscar...">
+                                                </div>
                                             </div>
 
                                             <!-- TABLA -->
-                                            <div id="tablaInstituciones"></div>
+                                            <div id="tablaUnidades"></div>
 
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!--MODAL INSTITUCIÓN-->
-                            <div class="modal fade" id="modalInstitucion" tabindex="-1" aria-hidden="true">
+                            <!--MODAL UNIDAD-->
+                            <div class="modal fade" id="modalUnidad" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
 
                                         <div class="modal-header" style="background:#7FB3D5;">
-                                            <h5 class="modal-title" id="tituloModal">Registrar Institución</h5>
+                                            <h5 class="modal-title" id="tituloModalUnidad">Registrar Unidad</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
 
                                         <div class="modal-body">
 
-                                            <form id="form_institucion">
+                                            <form id="form_unidad">
 
                                                 <input type="hidden" id="opcion" name="opcion" value="si_registro">
-                                                <input type="hidden" id="txt_id" name="txt_id">
+                                                <input type="hidden" id="id" name="txt_id">
+
+                                                <div class="row mb-3" id="grupo_nombre_unidad">
+                                                    <div class="col-md-12">
+                                                        <label for="txt_nombre" class="form-label">Nombre unidad</label>
+                                                        <input type="text" class="form-control"
+                                                               id="nombre" name="txt_nombre" required>
+                                                    </div>
+                                                </div>
 
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <label for="txt_nombre" class="form-label">Nombre</label>
-                                                        <input type="text" class="form-control"
-                                                               id="txt_nombre" name="txt_nombre" required>
+                                                        <label for="cmb_institucion" class="form-label">Institución</label>
+                                                        <select class="form-control" id="institucion"
+                                                                name="cmb_institucion" required>
+                                                            <option value="">Seleccione...</option>
+                                                        </select>
                                                     </div>
                                                 </div>
 
@@ -181,7 +197,7 @@
         </div>
 
         <!-- JS DE LA VISTA-->
-        <script src="Institucion.js"></script>
+        <script src="Unidad.js"></script>
 
     </body>
 </html>

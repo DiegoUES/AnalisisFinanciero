@@ -80,6 +80,12 @@
                         </a>
                     </li>
                     
+                    <li class="nav-item">
+                        <a href="Unidad.jsp" class="nav-link text-white">
+                            <i class="bi bi-building me-2"></i> Unidades
+                        </a>
+                    </li>
+                    
                     <!-- Agrega más opciones si las necesitas -->
                 </ul>
             </nav>
@@ -150,7 +156,7 @@
                                                             <p class="card-text small text-muted">
                                                                 Gestiona las unidades registradas.
                                                             </p>
-                                                            <a href="Personas.jsp" class="btn btn-sm btn-outline-success">
+                                                            <a href="Unidad.jsp" class="btn btn-sm btn-outline-success">
                                                                 Ir al módulo
                                                             </a>
                                                         </div>

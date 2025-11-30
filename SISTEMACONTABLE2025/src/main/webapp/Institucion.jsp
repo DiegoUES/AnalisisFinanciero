@@ -88,7 +88,12 @@
                         </a>
                     </li>
                     
-                    <!-- AQUI AGREGUEN LO QUE VAYAN HACIENDO PARA QUE APAREZCA EN EL MENÚ -->
+                    <li class="nav-item">
+                        <a href="Unidad.jsp" class="nav-link">
+                            <i class="bi bi-building me-2"></i> Unidades
+                        </a>
+                    </li>
+                    
                 </ul>
             </nav>
             <!--FIN MENÚ LATERAL-->
