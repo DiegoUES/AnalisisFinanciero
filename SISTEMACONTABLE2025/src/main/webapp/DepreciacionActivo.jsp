@@ -131,7 +131,7 @@
 
                                     <!-- TÍTULO -->
                                     <h4 class="fw-bold py-3 mb-3">
-                                        <span class="text-muted fw-light">BIENVENIDO A:</span> Activo fijo
+                                        <span class="text-muted fw-light">BIENVENIDO A:</span> Depreciación de Activo Fijo
                                     </h4>
 
                                     <!-- COMBO BUSCADOR DE ACTIVO -->
