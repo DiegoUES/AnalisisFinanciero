@@ -16,7 +16,6 @@ import java.util.ArrayList;
  *
  * @author Marlo
  */
-
 public class Institucion_DAO {
 
     private final Conexion conexion;
@@ -25,9 +24,8 @@ public class Institucion_DAO {
 
     // SQL
     private static final String SQL_MOSTRAR = "SELECT id, nombre FROM institucion";
-    private static final String SQL_INSERTAR = "INSERT INTO institucion (nombre) VALUES (?)";
+    private static final String SQL_INSERTAR = "INSERT INTO institucion (id,nombre) VALUES (?,?)";
     private static final String SQL_MODIFICAR = "UPDATE institucion SET nombre = ? WHERE id = ?";
-
 
     public Institucion_DAO() {
         this.conexion = new Conexion();
@@ -36,9 +34,7 @@ public class Institucion_DAO {
     public ArrayList<Institucion> mostrar() throws SQLException {
         this.listaInstituciones = new ArrayList<>();
 
-        try (Connection cn = conexion.getConexion();
-             PreparedStatement ps = cn.prepareStatement(SQL_MOSTRAR);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection cn = conexion.getConexion(); PreparedStatement ps = cn.prepareStatement(SQL_MOSTRAR); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 institucion = new Institucion();
@@ -50,20 +46,24 @@ public class Institucion_DAO {
         return this.listaInstituciones;
     }
 
-
     public String insertar(Institucion inst) throws SQLException {
         String resultado;
 
-        try (Connection cn = conexion.getConexion();
-             PreparedStatement ps = cn.prepareStatement(SQL_INSERTAR)) {
+        try (Connection cn = conexion.getConexion(); PreparedStatement ps = cn.prepareStatement(SQL_INSERTAR)) {
 
-            ps.setString(1, inst.getNombre());
+            ps.setInt(1, inst.getId());
+            ps.setString(2, inst.getNombre());
 
             int resultado_insertar = ps.executeUpdate();
             resultado = (resultado_insertar > 0) ? "exito" : "error_insertar_institucion";
 
         } catch (SQLException e) {
-            resultado = "error_excepcion";
+            // 23505 = unique_violation en PostgreSQL
+            if ("23505".equals(e.getSQLState())) {
+                resultado = "pk_duplicada";
+            } else {
+                resultado = "error_excepcion";
+            }
             e.printStackTrace();
         }
 
@@ -73,8 +73,7 @@ public class Institucion_DAO {
     public String modificar(Institucion inst) throws SQLException {
         String resultado;
 
-        try (Connection cn = conexion.getConexion();
-             PreparedStatement ps = cn.prepareStatement(SQL_MODIFICAR)) {
+        try (Connection cn = conexion.getConexion(); PreparedStatement ps = cn.prepareStatement(SQL_MODIFICAR)) {
 
             ps.setString(1, inst.getNombre());
             ps.setInt(2, inst.getId());

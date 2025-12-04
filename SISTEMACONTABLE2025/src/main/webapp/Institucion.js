@@ -15,6 +15,9 @@ $(function () {
         $("#opcion").val("si_registro");
         $("#tituloModal").text("Registrar Institución");
 
+        $("#grupo_codigo").show();
+        $("#txt_id").val("");
+
         $("#modalInstitucion").modal("show");
     });
 
@@ -36,13 +39,18 @@ $(function () {
             Swal.close();
 
             if (json[0].resultado === "exito") {
-                Swal.fire("Éxito", json[0].mensaje, "success");
-                $("#modalInstitucion").modal("hide");
-                cargarTabla();
-            } else {
-                Swal.fire("Error", "No se pudo realizar la acción", "error");
-                console.log("Detalle error:", json);
-            }
+        Swal.fire("Éxito", json[0].mensaje, "success");
+        $("#modalInstitucion").modal("hide");
+        cargarTabla();
+
+    } else if (json[0].resultado === "pk_duplicada") {
+       
+        Swal.fire("Atención", json[0].mensaje, "warning");
+
+    } else {
+        Swal.fire("Error", "No se pudo realizar la acción", "error");
+        console.log("Detalle error:", json);
+    }
 
         }).fail(function () {
             Swal.close();
@@ -71,6 +79,8 @@ $(function () {
                 $("#opcion").val("si_actualizo");
                 $("#txt_id").val(json[0].ID);
                 $("#txt_nombre").val(json[0].NOMBRE);
+
+                $("#grupo_codigo").hide();
 
                 $("#tituloModal").text("Editar Institución");
                 $("#modalInstitucion").modal("show");

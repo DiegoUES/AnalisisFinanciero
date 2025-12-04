@@ -22,10 +22,13 @@ public class Activo {
     private String caracteristicas;
     private Date fechaCompra;
     private int vidaUtil;
-    private String estadoDelActivo;    // donado, vendido, votado
+    private Boolean estadoActivo;
+    private String descripcionEstado;    // donado, vendido, votado
     private double precioAdquisicion;
     private Double precioUsado;        // puede ser null
     private String estadoDeCompra;     // nuevo/usado
+    
+     private int aniosUso;//depreciacionaños
 
     public Activo() {
     }
@@ -110,13 +113,23 @@ public class Activo {
         this.vidaUtil = vidaUtil;
     }
 
-    public String getEstadoDelActivo() {
-        return estadoDelActivo;
+    public Boolean getEstadoActivo() {
+        return estadoActivo;
     }
 
-    public void setEstadoDelActivo(String estadoDelActivo) {
-        this.estadoDelActivo = estadoDelActivo;
+    public void setEstadoActivo(Boolean estadoActivo) {
+        this.estadoActivo = estadoActivo;
     }
+
+    public String getDescripcionEstado() {
+        return descripcionEstado;
+    }
+
+    public void setDescripcionEstado(String descripcionEstado) {
+        this.descripcionEstado = descripcionEstado;
+    }
+
+   
 
     public double getPrecioAdquisicion() {
         return precioAdquisicion;
@@ -142,6 +155,8 @@ public class Activo {
         this.estadoDeCompra = estadoDeCompra;
     }
     
-    
+    // *** depreciacion ***
+    public int getAniosUso() { return aniosUso; }
+    public void setAniosUso(int aniosUso) { this.aniosUso = aniosUso; }
 }
 

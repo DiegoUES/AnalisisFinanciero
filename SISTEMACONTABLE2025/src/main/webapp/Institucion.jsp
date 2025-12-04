@@ -81,14 +81,19 @@
                             <i class="bi bi-house-door me-2"></i> Inicio
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a href="Institucion.jsp" class="nav-link active">
                             <i class="bi bi-building me-2"></i> Instituciones
                         </a>
                     </li>
-                    
-                    <!-- AQUI AGREGUEN LO QUE VAYAN HACIENDO PARA QUE APAREZCA EN EL MENÚ -->
+
+                    <li class="nav-item">
+                        <a href="Unidad.jsp" class="nav-link">
+                            <i class="bi bi-building me-2"></i> Unidades
+                        </a>
+                    </li>
+
                 </ul>
             </nav>
             <!--FIN MENÚ LATERAL-->
@@ -105,7 +110,7 @@
                                         <div class="card-body">
 
                                             <h4 class="fw-bold py-3 mb-2">
-                                                <span class="text-muted fw-light">CRUD /</span> Instituciones
+                                                <span class="text-muted fw-light">BIENVENIDO A:</span> Instituciones
                                             </h4>
 
                                             <div class="mb-3">
@@ -139,15 +144,47 @@
                                             <form id="form_institucion">
 
                                                 <input type="hidden" id="opcion" name="opcion" value="si_registro">
-                                                <input type="hidden" id="txt_id" name="txt_id">
+
+
+                                                <div class="row" id="grupo_codigo">
+                                                    <div class="col-md-12">
+                                                        <label for="txt_id" class="form-label">Código</label>
+                                                        <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            id="txt_id"
+                                                            name="txt_id"
+                                                            required
+                                                            maxlength="4"
+                                                            pattern="[1-9][0-9]{3}"
+                                                            title="Ingrese un código de 4 dígitos entre 1000 y 9999"
+                                                            oninput="
+                                                            // Dejar solo números
+                                                            this.value = this.value.replace(/[^0-9]/g, '');
+                                                            // Quitar ceros a la izquierda
+                                                            this.value = this.value.replace(/^0+/, '');
+                                                            // Limitar a 4 dígitos
+                                                            if (this.value.length > 4) {
+                                                            this.value = this.value.slice(0, 4);
+                                                            }
+                                                            "
+                                                            >
+                                                    </div>
+                                                </div>
+
+
 
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <label for="txt_nombre" class="form-label">Nombre</label>
                                                         <input type="text" class="form-control"
-                                                               id="txt_nombre" name="txt_nombre" required>
+                                                               id="txt_nombre" name="txt_nombre"
+                                                               required
+                                                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                                                               title="Solo se permiten letras y espacios">
                                                     </div>
                                                 </div>
+
 
                                                 <div class="modal-footer mt-3">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
