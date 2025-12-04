@@ -4,13 +4,13 @@ import com.ues.edu.modelo.Usuario;
 import com.ues.edu.modelo.dao.UsuarioDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
-
-import org.json.JSONObject;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
@@ -42,28 +42,33 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Cualquier otro GET muestra la pantalla de login
+        // Si ya hay usuario logueado, enviarlo al inicio
+        HttpSession ses = req.getSession(false);
+        if (ses != null && ses.getAttribute("usuario") != null) {
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            return;
+        }
+
+        // Mostrar pantalla de login
         req.getRequestDispatcher("/login.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws IOException, ServletException {
 
         req.setCharacterEncoding("UTF-8");
-        resp.setContentType("application/json;charset=UTF-8");
 
         String usuarioParam    = nvl(req.getParameter("usuario"));
-        String contrasenaParam = nvl(req.getParameter("contrasena"));
+        String contrasenaParam = nvl(req.getParameter("password"));
+        if (contrasenaParam.isEmpty()) {
+            contrasenaParam = nvl(req.getParameter("contrasena"));
+        }
 
-        JSONObject json = new JSONObject();
-
+        // Validación básica
         if (usuarioParam.isEmpty() || contrasenaParam.isEmpty()) {
-            json.put("resultado", "error");
-            json.put("mensaje", "Usuario y contraseña son obligatorios.");
-            try (PrintWriter out = resp.getWriter()) {
-                out.print(json.toString());
-            }
+            req.setAttribute("error", "Usuario y contraseña son obligatorios.");
+            req.getRequestDispatcher("/login.jsp").forward(req, resp);
             return;
         }
 
@@ -71,32 +76,37 @@ public class LoginServlet extends HttpServlet {
             Usuario u = usuarioDAO.autenticar(usuarioParam, contrasenaParam);
 
             if (u == null) {
-                json.put("resultado", "error");
-                json.put("mensaje", "Usuario o contraseña incorrectos.");
+                // Credenciales incorrectas
+                req.setAttribute("error", "Usuario o contraseña incorrectos.");
+                req.getRequestDispatcher("/login.jsp").forward(req, resp);
             } else {
-                // Guardar en sesión
+                // Login correcto: guardar en sesión
                 HttpSession ses = req.getSession(true);
+
+                // OBJETO COMPLETO (nombre que usan tus JSP en el cast)
+                ses.setAttribute("usuario", u);
+                // Lo dejo también por si lo usas en otros lados
                 ses.setAttribute("usuarioSesion", u);
+
+                // CAMPOS AUXILIARES
                 ses.setAttribute("idUsuario", u.getId());
                 ses.setAttribute("nombreUsuario", u.getNombre());
+
                 if (u.getRol() != null) {
-                    ses.setAttribute("rolId", u.getRol().getIdRol());
+                    // ESTOS DOS SON LOS QUE USAN TUS JSP INDIRECTAMENTE
+                    ses.setAttribute("rol", u.getRol().getNombre());
                     ses.setAttribute("rolNombre", u.getRol().getNombre());
+                    ses.setAttribute("rolId", u.getRol().getIdRol());
                 }
 
-                json.put("resultado", "ok");
-                json.put("usuario", u.getNombre());
-                json.put("rol", (u.getRol() != null) ? u.getRol().getNombre() : "");
+                // Redirigir al inicio (index.jsp)
+                resp.sendRedirect(req.getContextPath() + "/index.jsp");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            json.put("resultado", "error");
-            json.put("mensaje", "Error de base de datos: " + e.getMessage());
-        }
-
-        try (PrintWriter out = resp.getWriter()) {
-            out.print(json.toString());
+            req.setAttribute("error", "Error de base de datos: " + e.getMessage());
+            req.getRequestDispatcher("/login.jsp").forward(req, resp);
         }
     }
 }

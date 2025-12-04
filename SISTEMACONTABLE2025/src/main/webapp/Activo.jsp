@@ -1,4 +1,31 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    // === Obtener rol del usuario desde la sesión ===
+    String rol = "";
+    if (session != null) {
+        Object rolAttr = session.getAttribute("rol");
+        if (rolAttr != null) {
+            rol = rolAttr.toString();
+        } else {
+            Object usuarioAttr = session.getAttribute("usuario");
+            if (usuarioAttr != null) {
+                try {
+                    com.ues.edu.modelo.Usuario u = (com.ues.edu.modelo.Usuario) usuarioAttr;
+                    if (u.getRol() != null && u.getRol().getNombre() != null) {
+                        rol = u.getRol().getNombre();
+                    }
+                } catch (Exception e) {
+                    // Ignorar, rol quedará vacío
+                }
+            }
+        }
+    }
+    boolean esAdmin = "ADMIN".equalsIgnoreCase(rol) || "ADMINISTRADOR".equalsIgnoreCase(rol);
+    boolean esUsuario = "USUARIO".equalsIgnoreCase(rol) || "USER".equalsIgnoreCase(rol);
+    if (!esAdmin && !esUsuario) {
+        esUsuario = true; // rol por defecto
+    }
+%>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -70,7 +97,7 @@
 
     <body>
 
-        <!<!-- AQUI COMIENZA EL MENÚ LATERAL -->
+        <!-- AQUI COMIENZA EL MENÚ LATERAL -->
         <div class="layout-wrapper">
 
             <!--MENÚ LATERAL-->
@@ -83,10 +110,18 @@
 
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="index.jsp" class="nav-link text-white">
+                        <a href="index.jsp" class="nav-link active">
                             <i class="bi bi-house-door me-2"></i> Inicio
                         </a>
                     </li>
+
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="Usuarios.jsp" class="nav-link text-white">
+                            <i class="bi bi-building me-2"></i> Usuarios
+                        </a>
+                    </li>
+                    <% } %>
 
                     <li class="nav-item">
                         <a href="Institucion.jsp" class="nav-link text-white">
@@ -95,15 +130,43 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="Activo.jsp" class="nav-link active">
-                            <i class="bi bi-box-seam me-2"></i> Activo Fijo
+                        <a href="Activo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Activo Fijo
+                        </a>
+                    </li>
+
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="ActivoBaja.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Activo Baja
+                        </a>
+                    </li>
+                    <% } %>
+
+                    <li class="nav-item">
+                        <a href="DepreciacionActivo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Depreciacion
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="ActivoBaja.jsp" class="nav-link">
-                            <i class="bi bi-box-arrow-down me-2"></i> Activos de Baja
+                        <a href="TipoCategoria.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Categoria
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="TipoUsado.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Usado
+                        </a>
+                    </li>
+
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="Unidad.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Unidad
+                        </a>
+                    </li>
+                    <% } %>
                 </ul>
             </nav>
             <!--FIN MENÚ LATERAL-->
@@ -168,6 +231,11 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!--MODAL ACTIVO NUEVO-->
+                            <!-- (TODO LO DEMÁS IGUAL QUE TU CÓDIGO ORIGINAL) -->
+                            <!-- ... -->
+                            <!-- Dejo todo el contenido exactamente como lo tenías (modales, formularios, etc.) -->
 
                             <!--MODAL ACTIVO NUEVO-->
                             <div class="modal fade" id="modalActivoNuevo" tabindex="-1" aria-hidden="true">
@@ -376,6 +444,7 @@
                                 </div>
                             </div>
                             <!--FIN MODAL ACTIVO USADO-->
+
                             <!--MODAL DAR DE BAJA ACTIVO-->
                             <div class="modal fade" id="modalDarBaja" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -432,7 +501,6 @@
                                 </div>
                             </div>
                             <!--FIN MODAL DAR DE BAJA-->
-
 
                         </div>
                     </div>

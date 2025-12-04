@@ -3,11 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.ues.edu.modelo;
+
 /**
- *
- * @author Marlo
+ * Modelo de la tabla roles.
+ * idrol | nombre
  */
 public class Roles {
+
     private int idRol;
     private String nombre;
 
@@ -29,6 +31,4 @@ public class Roles {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
-    
 }

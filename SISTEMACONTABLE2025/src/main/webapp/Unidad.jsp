@@ -1,10 +1,45 @@
 <%-- 
     Document   : Unidad
-    Created on : 29 nov 2025, 5:49:36 p. m.
+    Created on : 29 nov 2025, 5:49:36 p. m.
     Author     : Marlo
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%
+    // ==============================
+    // OBTENER ROL DESDE LA SESIÓN
+    // ==============================
+    String rol = "";
+    if (session != null) {
+        Object rolAttr = session.getAttribute("rol");
+        if (rolAttr != null) {
+            rol = rolAttr.toString();
+        } else {
+            Object usuarioAttr = session.getAttribute("usuario");
+            if (usuarioAttr != null) {
+                try {
+                    com.ues.edu.modelo.Usuario u = (com.ues.edu.modelo.Usuario) usuarioAttr;
+                    if (u.getRol() != null && u.getRol().getNombre() != null) {
+                        rol = u.getRol().getNombre();
+                    }
+                } catch (Exception e) {
+                    // Si falla el cast, rol se queda vacío
+                }
+            }
+        }
+    }
+
+    boolean esAdmin   = "ADMIN".equalsIgnoreCase(rol) || "ADMINISTRADOR".equalsIgnoreCase(rol);
+    boolean esUsuario = "USUARIO".equalsIgnoreCase(rol) || "USER".equalsIgnoreCase(rol);
+
+    // ESTA PÁGINA SOLO ES PARA ADMINISTRADOR
+    if (!esAdmin) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -64,7 +99,7 @@
 
     <body>
 
-        <!<!-- AQUI COMIENZA EL MENÚ LATERAL -->
+        <!-- AQUI COMIENZA EL MENÚ LATERAL -->
         <div class="layout-wrapper">
 
             <!--MENÚ LATERAL-->
@@ -76,25 +111,74 @@
                 <hr class="text-secondary">
 
                 <ul class="nav nav-pills flex-column mb-auto">
+                    <!-- Inicio (todos los roles) -->
                     <li class="nav-item">
                         <a href="index.jsp" class="nav-link text-white">
                             <i class="bi bi-house-door me-2"></i> Inicio
                         </a>
                     </li>
 
+                    <!-- Usuarios: SOLO ADMIN -->
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="Usuarios.jsp" class="nav-link text-white">
+                            <i class="bi bi-building me-2"></i> Usuarios
+                        </a>
+                    </li>
+                    <% } %>
+
+                    <!-- Instituciones: ADMIN + USUARIO -->
                     <li class="nav-item">
                         <a href="Institucion.jsp" class="nav-link text-white">
                             <i class="bi bi-building me-2"></i> Instituciones
                         </a>
                     </li>
 
+                    <!-- Activo Fijo: ADMIN + USUARIO -->
                     <li class="nav-item">
-                        <a href="Unidad.jsp" class="nav-link active">
-                            <i class="bi bi-diagram-3 me-2"></i> Unidades
+                        <a href="Activo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Activo Fijo
                         </a>
                     </li>
 
-                    <!-- Aquí pueden agregar más opciones al menú -->
+                    <!-- Activo Baja: SOLO ADMIN -->
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="ActivoBaja.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Activo Baja
+                        </a>
+                    </li>
+                    <% } %>
+
+                    <!-- Depreciación: ADMIN + USUARIO -->
+                    <li class="nav-item">
+                        <a href="DepreciacionActivo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Depreciacion
+                        </a>
+                    </li>
+
+                    <!-- Tipo Categoria: ADMIN + USUARIO -->
+                    <li class="nav-item">
+                        <a href="TipoCategoria.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Categoria
+                        </a>
+                    </li>
+
+                    <!-- Tipo Usado: ADMIN + USUARIO -->
+                    <li class="nav-item">
+                        <a href="TipoUsado.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Usado
+                        </a>
+                    </li>
+
+                    <!-- Unidad: SOLO ADMIN (PÁGINA ACTUAL) -->
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="Unidad.jsp" class="nav-link active">
+                            <i class="bi bi-box-seam me-2"></i>Unidad
+                        </a>
+                    </li>
+                    <% } %>
                 </ul>
             </nav>
             <!--FIN MENÚ LATERAL-->
@@ -170,21 +254,19 @@
                                                             this.value = this.value.replace(/^0+/, '');
                                                             // Limitar a 4 dígitos
                                                             if (this.value.length > 4) {
-                                                            this.value = this.value.slice(0, 4);
+                                                                this.value = this.value.slice(0, 4);
                                                             }
                                                             "
-                                                            >
+                                                        >
                                                     </div>
                                                 </div>
-
-
 
                                                 <div class="row mb-3" id="grupo_nombre_unidad">
                                                     <div class="col-md-12">
                                                         <label for="txt_nombre" class="form-label">Nombre unidad</label>
                                                         <input type="text" class="form-control"
                                                                id="nombre" name="txt_nombre" required
-                                                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                                                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+"
                                                                title="Solo se permiten letras y espacios">
                                                     </div>
                                                 </div>

@@ -5,10 +5,43 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <%
-    // Contexto de la aplicación (ej: /SISTEMACONTABLE2025)
+    // ==============================
+    // CONTEXTO Y ROL DE USUARIO
+    // ==============================
     String ctx = request.getContextPath();
+
+    String rol = "";
+    if (session != null) {
+        Object rolAttr = session.getAttribute("rol");
+        if (rolAttr != null) {
+            rol = rolAttr.toString();
+        } else {
+            Object usuarioAttr = session.getAttribute("usuario");
+            if (usuarioAttr != null) {
+                try {
+                    com.ues.edu.modelo.Usuario u = (com.ues.edu.modelo.Usuario) usuarioAttr;
+                    if (u.getRol() != null && u.getRol().getNombre() != null) {
+                        rol = u.getRol().getNombre();
+                    }
+                } catch (Exception e) {
+                    // Si falla el cast, rol se queda vacío
+                }
+            }
+        }
+    }
+
+    boolean esAdmin   = "ADMIN".equalsIgnoreCase(rol) || "ADMINISTRADOR".equalsIgnoreCase(rol);
+    boolean esUsuario = "USUARIO".equalsIgnoreCase(rol) || "USER".equalsIgnoreCase(rol);
+
+    // ESTA PÁGINA ES SOLO PARA ADMIN
+    if (!esAdmin) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
 %>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -80,32 +113,75 @@
                 <hr class="text-secondary">
 
                 <ul class="nav nav-pills flex-column mb-auto">
+                    <!-- Inicio (todos los roles) -->
                     <li class="nav-item">
                         <a href="index.jsp" class="nav-link text-white">
                             <i class="bi bi-house-door me-2"></i> Inicio
                         </a>
                     </li>
 
+                    <!-- Usuarios: SOLO ADMIN (PÁGINA ACTUAL) -->
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="Usuarios.jsp" class="nav-link active">
+                            <i class="bi bi-building me-2"></i> Usuarios
+                        </a>
+                    </li>
+                    <% } %>
+
+                    <!-- Instituciones: ADMIN + USUARIO -->
                     <li class="nav-item">
                         <a href="Institucion.jsp" class="nav-link text-white">
                             <i class="bi bi-building me-2"></i> Instituciones
                         </a>
                     </li>
 
+                    <!-- Activo Fijo: ADMIN + USUARIO -->
                     <li class="nav-item">
-                        <a href="Usuarios.jsp" class="nav-link active">
-                            <i class="bi bi-people me-2"></i> Usuarios
+                        <a href="Activo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Activo Fijo
                         </a>
                     </li>
-                </ul>
 
-                <!-- Botón Cerrar sesión -->
-                <div class="mt-auto">
-                    <hr class="text-secondary">
-                    <a href="LoginServlet?accion=Logout" class="btn btn-outline-light w-100">
-                        <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
-                    </a>
-                </div>
+                    <!-- Activo Baja: SOLO ADMIN -->
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="ActivoBaja.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Activo Baja
+                        </a>
+                    </li>
+                    <% } %>
+
+                    <!-- Depreciación: ADMIN + USUARIO -->
+                    <li class="nav-item">
+                        <a href="DepreciacionActivo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Depreciacion
+                        </a>
+                    </li>
+
+                    <!-- Tipo Categoria: ADMIN + USUARIO -->
+                    <li class="nav-item">
+                        <a href="TipoCategoria.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Categoria
+                        </a>
+                    </li>
+
+                    <!-- Tipo Usado: ADMIN + USUARIO -->
+                    <li class="nav-item">
+                        <a href="TipoUsado.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Usado
+                        </a>
+                    </li>
+
+                    <!-- Unidad: SOLO ADMIN -->
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="Unidad.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Unidad
+                        </a>
+                    </li>
+                    <% } %>
+                </ul>
             </nav>
             <!--FIN MENÚ LATERAL-->
 
