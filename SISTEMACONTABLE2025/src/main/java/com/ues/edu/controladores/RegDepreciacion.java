@@ -16,7 +16,7 @@ import java.util.List;
 @WebServlet("/depreciacion")
 public class RegDepreciacion extends HttpServlet {
 
-    private Activo_DAO activoDao = new Activo_DAO();
+    private final Activo_DAO activoDao = new Activo_DAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -25,81 +25,175 @@ public class RegDepreciacion extends HttpServlet {
         String idParam = request.getParameter("id");
 
         Activo activo = null;
-        Double valorSujeto = null;
-        Double depreciacionAnual = null;
-        Double depreciacionAcumulada = null;
-        Double valorEnLibros = null;
+
+        // Atributos que enviaremos al JSP
+        Double valorResidualAttr          = null;
+        Double valorSujetoAttr            = null; // Importe depreciable
+        Double depreciacionAnualAttr      = null;
+        Double depreciacionMensualAttr    = null;
+        Double depreciacionDiariaAttr     = null;
+        Double depreciacionAcumuladaAttr  = null;
+        Double valorEnLibrosAttr          = null;
 
         // ==============================
-        // SI ENTRA CON ID → CALCULAMOS
+        // SI HAY ID → BUSCAR ACTIVO
         // ==============================
         if (idParam != null && !idParam.trim().isEmpty()) {
 
             try {
                 int id = Integer.parseInt(idParam);
                 activo = activoDao.obtenerActivo(id);
-            } catch (NumberFormatException ex) {
-                // id inválido, lo dejamos como null
+            } catch (Exception e) {
+                activo = null;
             }
 
             if (activo != null) {
 
-                // 1. Valor sujeto a depreciación
-                double valor = activo.getPrecioAdquisicion();
+                double precio = activo.getPrecioAdquisicion();
+                double valorResidual = 0.0;
+                double importeDepreciable;
+                double depAnual;
+                double depMensual;
+                double depDiaria;
+                double depAcumulada;
+                double valorLibros;
 
+                // ==============================
+                // VIDA ÚTIL Y AÑOS DE USO
+                // ==============================
+                int vidaUtil = activo.getVidaUtil();   // viene de la BD (vidautil)
+                int aniosUso = activo.getAniosUso();   // calculado con age()
+
+                // Si vida útil viene 0 o negativa → usamos años de uso como respaldo
+                if (vidaUtil <= 0) {
+                    if (aniosUso > 0) {
+                        vidaUtil = aniosUso;
+                    } else {
+                        vidaUtil = 1;  // mínimo 1 para evitar división entre 0
+                    }
+                    // Actualizamos el objeto para que la JSP no muestre 0
+                    activo.setVidaUtil(vidaUtil);
+                }
+
+                // ==============================
+                // 1. VALOR RESIDUAL
+                // ==============================
                 String estadoCompra = activo.getEstadoDeCompra();
-                if (estadoCompra != null && estadoCompra.equalsIgnoreCase("usado")) {
+                estadoCompra = (estadoCompra != null)
+                        ? estadoCompra.trim().toLowerCase()
+                        : "";
+
+                /*
+                 * NUEVO  → usa porcentaje de TipoCategoria como % de valor residual
+                 * USADO  → usa porcentaje de TipoUsado como % de valor residual
+                 *
+                 * Ejemplo cuaderno:
+                 * precio = 3500
+                 * porcentaje = 20%
+                 * valorResidual = 3500 * 20% = 700
+                 */
+                if ("nuevo".equals(estadoCompra)) {
+
+                    if (activo.getTipoCategoria() != null) {
+                        double p = activo.getTipoCategoria().getPorcentaje(); // ej. 20
+                        valorResidual = precio * (p / 100.0);
+                    }
+
+                } else if ("usado".equals(estadoCompra)) {
 
                     TipoUsado tu = activo.getTipoUsado();
 
                     if (tu != null && tu.getPorcentaje() > 0) {
-                        // Usamos la tabla tipousado: 80,60,40,20
-                        valor = valor * (tu.getPorcentaje() / 100.0);
+                        // ej. 20, 30, etc. (lo que definas como % residual)
+                        valorResidual = precio * (tu.getPorcentaje() / 100.0);
                     } else {
-                        // Respaldo por años de uso
-                        int u = activo.getAniosUso();
-                        if (u == 1)       valor *= 0.80;
-                        else if (u == 2)  valor *= 0.60;
-                        else if (u == 3)  valor *= 0.40;
-                        else              valor *= 0.20;
+                        // Respaldo si no viene TipoUsado configurado
+                        if      (aniosUso == 1) valorResidual = precio * 0.80;
+                        else if (aniosUso == 2) valorResidual = precio * 0.60;
+                        else if (aniosUso == 3) valorResidual = precio * 0.40;
+                        else                    valorResidual = precio * 0.20;
                     }
                 }
 
-                // 2. Porcentaje anual según categoría
-                double porcentajeAnual = 0.0;
-                if (activo.getTipoCategoria() != null) {
-                    porcentajeAnual = activo.getTipoCategoria().getPorcentaje();
+                // ==============================
+                // 2. IMPORTE DEPRECIABLE
+                // ==============================
+                importeDepreciable = precio - valorResidual;
+                if (importeDepreciable < 0) {
+                    importeDepreciable = 0;
                 }
 
-                double anual = valor * (porcentajeAnual / 100.0);
+                // ==============================
+                // 3. DEPRECIACIÓN ANUAL
+                // ==============================
+                // Fórmula: Importe depreciable ÷ vida útil
+                // Ejemplo: 2,800 ÷ 2 = 1,400
+                depAnual = importeDepreciable / vidaUtil;
 
-                // 3. Depreciación acumulada
-                int aniosUso = activo.getAniosUso();
-                double acumulada = anual * aniosUso;
+                // ==============================
+                // 4. DEPRECIACIÓN MENSUAL
+                // ==============================
+                // Fórmula: Depreciación anual ÷ 12
+                // Ejemplo: 1,400 ÷ 12 = 116.67
+                depMensual = depAnual / 12.0;
 
-                // 4. Valor en libros
-                double libros = valor - acumulada;
-                if (libros < 0) {
-                    libros = 0;
+                // ==============================
+                // 5. DEPRECIACIÓN DIARIA
+                // ==============================
+                // Política: 30 días por mes
+                // Fórmula: Depreciación mensual ÷ 30
+                // Ejemplo: 116.67 ÷ 30 = 3.89
+                depDiaria = depMensual / 30.0;
+
+                // ==============================
+                // 6. DEPRECIACIÓN ACUMULADA
+                // ==============================
+                // Fórmula simple: depAnual × años de uso
+                // Ejemplo: 1,400 × 2 = 2,800
+                depAcumulada = depAnual * aniosUso;
+
+                // No puede superar el importe depreciable
+                if (depAcumulada > importeDepreciable) {
+                    depAcumulada = importeDepreciable;
                 }
 
-                valorSujeto = valor;
-                depreciacionAnual = anual;
-                depreciacionAcumulada = acumulada;
-                valorEnLibros = libros;
+                // ==============================
+                // 7. VALOR EN LIBROS
+                // ==============================
+                // Valor en libros = precio de adquisición – depreciación acumulada
+                // Ejemplo: 3,500 – 2,800 = 700
+                valorLibros = precio - depAcumulada;
+                if (valorLibros < 0) {
+                    valorLibros = 0;
+                }
+
+                // ==============================
+                // ENVIAR A LA VISTA
+                // ==============================
+                valorResidualAttr          = valorResidual;
+                valorSujetoAttr            = importeDepreciable;
+                depreciacionAnualAttr      = depAnual;
+                depreciacionMensualAttr    = depMensual;
+                depreciacionDiariaAttr     = depDiaria;
+                depreciacionAcumuladaAttr  = depAcumulada;
+                valorEnLibrosAttr          = valorLibros;
             }
         }
 
-        // LISTA DE ACTIVOS PARA EL COMBO
+        // LISTA PARA EL COMBO
         List<Activo> listaActivos = activoDao.listarActivos();
 
-        // Atributos para la vista
         request.setAttribute("listaActivos", listaActivos);
         request.setAttribute("activo", activo);
-        request.setAttribute("valorSujeto", valorSujeto);
-        request.setAttribute("anual", depreciacionAnual);
-        request.setAttribute("acumulada", depreciacionAcumulada);
-        request.setAttribute("libros", valorEnLibros);
+
+        // Valores de cálculo
+        request.setAttribute("valorResidual", valorResidualAttr);
+        request.setAttribute("valorSujeto", valorSujetoAttr);
+        request.setAttribute("anual",  depreciacionAnualAttr);
+        request.setAttribute("mensual", depreciacionMensualAttr);
+        request.setAttribute("diaria",  depreciacionDiariaAttr);
+        request.setAttribute("acumulada", depreciacionAcumuladaAttr);
+        request.setAttribute("libros", valorEnLibrosAttr);
 
         request.getRequestDispatcher("DepreciacionActivo.jsp").forward(request, response);
     }

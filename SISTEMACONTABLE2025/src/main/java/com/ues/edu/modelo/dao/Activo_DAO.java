@@ -46,21 +46,25 @@ public class Activo_DAO {
                     a = new Activo();
                     a.setId(rs.getInt("id"));
                     a.setNombre(rs.getString("nombre"));
-                    a.setCodigo(rs.getString("codigo"));                 // nuevo: código
-                    a.setEstadoDelActivo(rs.getString("estadodelactivo"));// nuevo: estado del activo
+                    a.setCodigo(rs.getString("codigo"));
+                    a.setEstadoDelActivo(rs.getString("estadodelactivo"));
 
                     a.setPrecioAdquisicion(rs.getDouble("precioadquisicion"));
                     a.setFechaCompra(rs.getDate("fechacompra"));
                     a.setEstadoDeCompra(rs.getString("estadodecompra"));
+
+                    // ➜ VIDA ÚTIL (AÑOS) DESDE LA TABLA
+                    a.setVidaUtil(rs.getInt("vidautil"));
+
+                    // ➜ AÑOS DE USO (calculado con age())
                     a.setAniosUso(rs.getInt("anios_uso"));
 
                     // -------- TipoCategoria --------
                     if (rs.getObject("tc_idtipo") != null) {
                         TipoCategoria tc = new TipoCategoria();
-                        // usa el setter que tengas en tu clase TipoCategoria
                         tc.setIdTipo(rs.getInt("tc_idtipo"));
                         tc.setNombre(rs.getString("tc_nombre"));
-                        tc.setPorcentaje(rs.getDouble("tc_porcentaje")); // 5,20,25,50
+                        tc.setPorcentaje(rs.getDouble("tc_porcentaje")); // ej. 20
                         a.setTipoCategoria(tc);
                     }
 

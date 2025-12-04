@@ -74,8 +74,12 @@
     // ==============================
     List<Activo> listaActivos = (List<Activo>) request.getAttribute("listaActivos");
     Activo activoSel          = (Activo) request.getAttribute("activo");
+
+    Double valorResidual      = (Double) request.getAttribute("valorResidual");
     Double valorSujeto        = (Double) request.getAttribute("valorSujeto");
     Double anual              = (Double) request.getAttribute("anual");
+    Double mensual            = (Double) request.getAttribute("mensual");
+    Double diaria             = (Double) request.getAttribute("diaria");
     Double acumulada          = (Double) request.getAttribute("acumulada");
     Double libros             = (Double) request.getAttribute("libros");
 
@@ -127,7 +131,7 @@
 
                                     <!-- TÍTULO -->
                                     <h4 class="fw-bold py-3 mb-3">
-                                        <span class="text-muted fw-light">Activos /</span> Depreciación
+                                        <span class="text-muted fw-light">BIENVENIDO A:</span> Activo fijo
                                     </h4>
 
                                     <!-- COMBO BUSCADOR DE ACTIVO -->
@@ -202,29 +206,48 @@
                                                 <td><%= (activoSel != null && activoSel.getEstadoDeCompra() != null) ? activoSel.getEstadoDeCompra() : "" %></td>
                                             </tr>
                                             <tr>
-                                                <td>Años de uso</td>
-                                                <td><%= (activoSel != null) ? activoSel.getAniosUso() : "" %></td>
+                                                <td>Vida útil (años)</td>
+                                                <td>
+                                                    <%
+                                                        if (activoSel != null) {
+                                                            int vu = activoSel.getVidaUtil();
+                                                            int au = activoSel.getAniosUso();
+                                                            if (vu <= 0 && au > 0) {
+                                                                out.print(au);   // respaldo: años de uso
+                                                            } else if (vu > 0) {
+                                                                out.print(vu);
+                                                            }
+                                                        }
+                                                    %>
+                                                </td>
                                             </tr>
+                                            
                                             <tr>
                                                 <td>Precio de adquisición</td>
                                                 <td class="valor-num"><%= (activoSel != null) ? activoSel.getPrecioAdquisicion() : "" %></td>
                                             </tr>
                                             <tr>
-                                                <td>Valor sujeto a depreciación</td>
-                                                <td class="valor-num"><%= (valorSujeto != null) ? valorSujeto : "" %></td>
+                                                <td>Valor residual</td>
+                                                <td class="valor-num"><%= (valorResidual != null) ? String.format("%.2f", valorResidual) : "" %></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Valor sujeto a depreciación (importe depreciable)</td>
+                                                <td class="valor-num"><%= (valorSujeto != null) ? String.format("%.2f", valorSujeto) : "" %></td>
                                             </tr>
                                             <tr>
                                                 <td>Depreciación anual</td>
-                                                <td class="valor-num"><%= (anual != null) ? anual : "" %></td>
+                                                <td class="valor-num"><%= (anual != null) ? String.format("%.2f", anual) : "" %></td>
                                             </tr>
                                             <tr>
-                                                <td>Depreciación acumulada</td>
-                                                <td class="valor-num"><%= (acumulada != null) ? acumulada : "" %></td>
+                                                <td>Depreciación mensual</td>
+                                                <td class="valor-num"><%= (mensual != null) ? String.format("%.2f", mensual) : "" %></td>
                                             </tr>
                                             <tr>
-                                                <td>Valor en libros</td>
-                                                <td class="valor-num"><%= (libros != null) ? libros : "" %></td>
+                                                <td>Depreciación diaria</td>
+                                                <td class="valor-num"><%= (diaria != null) ? String.format("%.2f", diaria) : "" %></td>
                                             </tr>
+                                            
+                                            
                                             </tbody>
                                         </table>
                                     </div>
