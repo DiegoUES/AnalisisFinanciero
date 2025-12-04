@@ -166,6 +166,13 @@
                     </li>
                     <% } %>
                 </ul>
+
+                <!-- BOTÓN CERRAR SESIÓN -->
+                <hr class="text-secondary">
+                <a href="LoginServlet?accion=logout" class="btn btn-outline-light w-100">
+                    <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
+                </a>
+
             </nav>
             <!--FIN MENÚ LATERAL-->
 
