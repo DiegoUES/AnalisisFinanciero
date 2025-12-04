@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  *
- * @author Mayel
+ * @author Marlo
  */
 public class Activo {
     private int id;
@@ -22,11 +22,12 @@ public class Activo {
     private String caracteristicas;
     private Date fechaCompra;
     private int vidaUtil;
-    private Boolean estadoActivo;
-    private String descripcionEstado;    // donado, vendido, votado
+    private String estadoDelActivo;    // donado, vendido, votado
     private double precioAdquisicion;
     private Double precioUsado;        // puede ser null
     private String estadoDeCompra;     // nuevo/usado
+    
+     private int aniosUso;//depreciacionaños
 
     public Activo() {
     }
@@ -111,20 +112,12 @@ public class Activo {
         this.vidaUtil = vidaUtil;
     }
 
-    public Boolean getEstadoActivo() {
-        return estadoActivo;
+    public String getEstadoDelActivo() {
+        return estadoDelActivo;
     }
 
-    public void setEstadoActivo(Boolean estadoActivo) {
-        this.estadoActivo = estadoActivo;
-    }
-
-    public String getDescripcionEstado() {
-        return descripcionEstado;
-    }
-
-    public void setDescripcionEstado(String descripcionEstado) {
-        this.descripcionEstado = descripcionEstado;
+    public void setEstadoDelActivo(String estadoDelActivo) {
+        this.estadoDelActivo = estadoDelActivo;
     }
 
     public double getPrecioAdquisicion() {
@@ -150,7 +143,9 @@ public class Activo {
     public void setEstadoDeCompra(String estadoDeCompra) {
         this.estadoDeCompra = estadoDeCompra;
     }
-
-  
+    
+    // *** depreciacion ***
+    public int getAniosUso() { return aniosUso; }
+    public void setAniosUso(int aniosUso) { this.aniosUso = aniosUso; }
 }
 
