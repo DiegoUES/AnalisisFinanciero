@@ -113,7 +113,7 @@
                                         <div class="card-body">
 
                                             <h4 class="fw-bold py-3 mb-2">
-                                                <span class="text-muted fw-light">CRUD /</span> Tipos de Activo
+                                                <span class="text-muted fw-light">BIENVENIDO A:</span> Tipos de Activo
                                             </h4>
 
                                             <div class="mb-3">

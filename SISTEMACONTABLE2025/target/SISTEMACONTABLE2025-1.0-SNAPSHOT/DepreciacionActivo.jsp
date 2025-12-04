@@ -182,7 +182,7 @@
                                                 <strong>Código:</strong> <%= activoSel.getCodigo() != null ? activoSel.getCodigo() : "" %>
                                             </p>
                                             <p class="mb-0">
-                                                <strong>Estado del activo:</strong> <%= activoSel.getEstadoDelActivo() != null ? activoSel.getEstadoDelActivo() : "" %>
+                                                <strong>Estado del activo:</strong> <%= activoSel.getEstadoDeCompra()!= null ? activoSel.getEstadoDeCompra(): "" %>
                                             </p>
                                         </div>
                                     <% } %>

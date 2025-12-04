@@ -47,7 +47,7 @@ public class Activo_DAO {
                     a.setId(rs.getInt("id"));
                     a.setNombre(rs.getString("nombre"));
                     a.setCodigo(rs.getString("codigo"));
-                    a.setEstadoDelActivo(rs.getString("estadodelactivo"));
+                    a.setDescripcionEstado(rs.getString("estadodelactivo"));
 
                     a.setPrecioAdquisicion(rs.getDouble("precioadquisicion"));
                     a.setFechaCompra(rs.getDate("fechacompra"));
