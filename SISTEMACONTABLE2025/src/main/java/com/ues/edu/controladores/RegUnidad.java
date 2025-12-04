@@ -151,7 +151,7 @@ public class RegUnidad extends HttpServlet {
                 try {
                     dao = new Unidad_DAO();
                     unidad = new Unidad();
-                    
+
                     unidad.setId(Integer.parseInt(req.getParameter("txt_id")));
 
                     unidad.setNombre(req.getParameter("txt_nombre"));
@@ -165,6 +165,9 @@ public class RegUnidad extends HttpServlet {
                     if ("exito".equals(r)) {
                         json.put("resultado", "exito")
                                 .put("mensaje", "Unidad registrada correctamente.");
+                    } else if ("pk_duplicada".equals(r)) {
+                        json.put("resultado", "pk_duplicada")
+                                .put("mensaje", "Ya existe una unidad con ese código.");
                     } else {
                         json.put("resultado", "error_sql")
                                 .put("detalle", r);
@@ -180,7 +183,6 @@ public class RegUnidad extends HttpServlet {
                 break;
             }
 
-            
             case "cargarDatos": {
 
                 JSONArray array = new JSONArray();

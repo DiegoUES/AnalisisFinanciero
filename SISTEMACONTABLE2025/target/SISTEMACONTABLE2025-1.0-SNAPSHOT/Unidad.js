@@ -50,10 +50,16 @@ $(function () {
                 Swal.fire("Éxito", json[0].mensaje, "success");
                 $("#modalUnidad").modal("hide");
                 cargarTabla();
+
+            } else if (json[0].resultado === "pk_duplicada") {
+
+                Swal.fire("Atención", json[0].mensaje, "warning");
+
             } else {
                 Swal.fire("Error", "No se pudo realizar la acción", "error");
                 console.log("Detalle error:", json);
             }
+
 
         }).fail(function () {
             Swal.close();
@@ -92,7 +98,7 @@ $(function () {
 
 
                 $("#grupo_codigo").hide();
-                //$("#txt_id").prop("disabled", true).removeAttr("required");
+                
                 $("#txt_id")
                         .prop("readonly", true)
                         .removeAttr("required")

@@ -98,10 +98,15 @@ public class Unidad_DAO {
             int resultado_insertar = ps.executeUpdate();
             resultado = (resultado_insertar > 0) ? "exito" : "error_insertar_unidad";
 
-        } catch (SQLException e) {
+        }catch (SQLException e) {
+        // 23505 = unique_violation en PostgreSQL (llave duplicada)
+        if ("23505".equals(e.getSQLState())) {
+            resultado = "pk_duplicada";
+        } else {
             resultado = "error_excepcion";
-            e.printStackTrace();
         }
+        e.printStackTrace();
+    }
 
         return resultado;
     }
