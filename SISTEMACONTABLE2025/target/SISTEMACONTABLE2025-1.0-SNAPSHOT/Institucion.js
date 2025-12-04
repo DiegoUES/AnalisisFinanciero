@@ -39,13 +39,18 @@ $(function () {
             Swal.close();
 
             if (json[0].resultado === "exito") {
-                Swal.fire("Éxito", json[0].mensaje, "success");
-                $("#modalInstitucion").modal("hide");
-                cargarTabla();
-            } else {
-                Swal.fire("Error", "No se pudo realizar la acción", "error");
-                console.log("Detalle error:", json);
-            }
+        Swal.fire("Éxito", json[0].mensaje, "success");
+        $("#modalInstitucion").modal("hide");
+        cargarTabla();
+
+    } else if (json[0].resultado === "pk_duplicada") {
+       
+        Swal.fire("Atención", json[0].mensaje, "warning");
+
+    } else {
+        Swal.fire("Error", "No se pudo realizar la acción", "error");
+        console.log("Detalle error:", json);
+    }
 
         }).fail(function () {
             Swal.close();

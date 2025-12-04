@@ -22,7 +22,8 @@ import org.json.JSONObject;
  * @author Marlo
  */
 @WebServlet(name = "RegInstitucion", urlPatterns = {"/RegInstitucion"})
-public class RegInstitucion extends HttpServlet{
+public class RegInstitucion extends HttpServlet {
+
     private Institucion_DAO dao;
     private ArrayList<Institucion> listaInstituciones;
     private Institucion institucion = null;
@@ -68,46 +69,45 @@ public class RegInstitucion extends HttpServlet{
                     StringBuilder html = new StringBuilder(1024);
 
                     html.append("<table id='tabla_idServlet' ")
-                        .append("class='display nowrap table table-striped align-middle' style='width:100%'>");
+                            .append("class='display nowrap table table-striped align-middle' style='width:100%'>");
 
                     html.append("<thead><tr>")
-                        .append("<th>Código Institución</th>")    
-                        .append("<th>Nombre</th>")
-                        .append("<th class='text-center'>Acciones</th>")
-                        .append("</tr></thead>");
+                            .append("<th>Código Institución</th>")
+                            .append("<th>Nombre</th>")
+                            .append("<th class='text-center'>Acciones</th>")
+                            .append("</tr></thead>");
 
                     html.append("<tbody>");
 
                     for (Institucion inst : listaInstituciones) {
 
                         html.append("<tr>")
-                            .append("<td>").append(nvl(inst.getId())).append("</td>")    
-                            .append("<td>").append(nvl(inst.getNombre())).append("</td>")
-                            .append("<td class='text-center'>")
-                            .append("<div class='btn-group'>")
-                            // BOTÓN EDITAR
-                            .append("<button class='btn btn-sm btn-outline-primary btn_editar' ")
-                            .append("data-id='").append(inst.getId()).append("'>")
-                            .append("<i class='bi bi-pencil-square'></i></button>")
-                            .append("</div></td>")
-                            .append("</tr>");
+                                .append("<td>").append(nvl(inst.getId())).append("</td>")
+                                .append("<td>").append(nvl(inst.getNombre())).append("</td>")
+                                .append("<td class='text-center'>")
+                                .append("<div class='btn-group'>")
+                                // BOTÓN EDITAR
+                                .append("<button class='btn btn-sm btn-outline-primary btn_editar' ")
+                                .append("data-id='").append(inst.getId()).append("'>")
+                                .append("<i class='bi bi-pencil-square'></i></button>")
+                                .append("</div></td>")
+                                .append("</tr>");
                     }
 
                     html.append("</tbody></table>");
 
                     json.put("resultado", "exito")
-                        .put("tabla", html.toString());
+                            .put("tabla", html.toString());
 
                 } catch (Exception e) {
                     json.put("resultado", "error_sql")
-                        .put("mensaje", e.getMessage());
+                            .put("mensaje", e.getMessage());
                 }
 
                 array.put(json);
                 out.write(array.toString());
                 break;
             }
-            
 
             case "si_registro": {
 
@@ -125,15 +125,18 @@ public class RegInstitucion extends HttpServlet{
 
                     if ("exito".equals(r)) {
                         json.put("resultado", "exito")
-                            .put("mensaje", "Institución registrada correctamente.");
+                                .put("mensaje", "Institución registrada correctamente.");
+                    } else if ("pk_duplicada".equals(r)) {
+                        json.put("resultado", "pk_duplicada")
+                                .put("mensaje", "Ya existe una institución con ese código.");
                     } else {
                         json.put("resultado", "error_sql")
-                            .put("detalle", r);
+                                .put("detalle", r);
                     }
 
                 } catch (Exception e) {
                     json.put("resultado", "error_sql")
-                        .put("error_mostrado", e.getMessage());
+                            .put("error_mostrado", e.getMessage());
                 }
 
                 array.put(json);
@@ -159,16 +162,16 @@ public class RegInstitucion extends HttpServlet{
 
                     if (inst != null) {
                         json.put("resultado", "exito")
-                            .put("ID", inst.getId())
-                            .put("NOMBRE", inst.getNombre());
+                                .put("ID", inst.getId())
+                                .put("NOMBRE", inst.getNombre());
                     } else {
                         json.put("resultado", "no_encontrado")
-                            .put("mensaje", "No existe la institución solicitada.");
+                                .put("mensaje", "No existe la institución solicitada.");
                     }
 
                 } catch (Exception e) {
                     json.put("resultado", "error_sql")
-                        .put("error_mostrado", e.getMessage());
+                            .put("error_mostrado", e.getMessage());
                 }
 
                 array.put(json);
@@ -192,15 +195,15 @@ public class RegInstitucion extends HttpServlet{
 
                     if ("exito".equals(r)) {
                         json.put("resultado", "exito")
-                            .put("mensaje", "Registro actualizado correctamente.");
+                                .put("mensaje", "Registro actualizado correctamente.");
                     } else {
                         json.put("resultado", "error_sql")
-                            .put("detalle", r);
+                                .put("detalle", r);
                     }
 
                 } catch (Exception e) {
                     json.put("resultado", "error_sql")
-                        .put("error_mostrado", e.getMessage());
+                            .put("error_mostrado", e.getMessage());
                 }
 
                 array.put(json);
@@ -208,8 +211,7 @@ public class RegInstitucion extends HttpServlet{
                 break;
             }
         }
- 
+
     }
-    
-    
+
 }
