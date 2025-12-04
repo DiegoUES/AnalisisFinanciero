@@ -37,7 +37,7 @@ public class ActivoDao {
     private static final String SQL_INSERTAR_NUEVO = "INSERT INTO activo (nombre, idunidad, idtipo, codigo, correlativo, caracteristicas, fechacompra, vidautil, estadodelactivo, precioadquisicion, estadodecompra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_INSERTAR_USADO = "INSERT INTO activo (nombre, idunidad, idtipo, idtipousado, codigo, correlativo, caracteristicas, fechacompra, vidautil, estadodelactivo, precioadquisicion, preciousado, estadodecompra) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_OBTENER_UNIDADES_CON_INSTITUCION
-            = "SELECT i.id AS idInsti, i.nombre AS nombreInsti, u.id AS idUni, u.nombre AS nombreUnidad "
+            = "SELECT i.id AS idInsti, i.nombre AS nombreInsti, u.idunidad AS idUni, u.nombre AS nombreUnidad "
             + "FROM unidad u "
             + "INNER JOIN institucion i ON u.idinstitucion = i.id "
             + "ORDER BY i.nombre, u.nombre";
@@ -66,7 +66,7 @@ public class ActivoDao {
             + "    a.estadodecompra\n"
             + "FROM activo a\n"
             + "JOIN tipocategoria tc ON tc.idtipo = a.idtipo\n"
-            + "JOIN unidad u ON u.id = a.idunidad\n"
+            + "JOIN unidad u ON u.idunidad = a.idunidad\n"
             + "WHERE a.estadodelactivo = true\n"
             + "  AND a.estadodecompra = 'Nuevo';";
     private static final String SQL_MOSTRAR_USADOS = "SELECT \n"
@@ -84,7 +84,7 @@ public class ActivoDao {
             + "    a.estadodecompra\n"
             + "FROM activo a\n"
             + "JOIN tipocategoria tc ON tc.idtipo = a.idtipo\n"
-            + "JOIN unidad u ON u.id = a.idunidad\n"
+            + "JOIN unidad u ON u.idunidad = a.idunidad\n"
             + "WHERE a.estadodelactivo = true\n"
             + "  AND a.estadodecompra = 'Usado';";
     private static final String SQL_MOSTRAR_INACTIVOS = "SELECT \n"
@@ -96,7 +96,7 @@ public class ActivoDao {
             + "a.estadodecompra,\n"
             + "a.descripcionestado\n"
             + "FROM activo a\n"
-            + "JOIN unidad u ON u.id = a.idunidad\n"
+            + "JOIN unidad u ON u.idunidad = a.idunidad\n"
             + "WHERE a.estadodelactivo = false";
 
     private static final String SQL_MODIFICAR = "UPDATE activo\n"
