@@ -73,21 +73,30 @@
                             <i class="bi bi-house-door me-2"></i> Inicio
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a href="Institucion.jsp" class="nav-link text-white">
                             <i class="bi bi-building me-2"></i> Instituciones
                         </a>
                     </li>
-                    
+
+                    <!-- NUEVO: enlace al módulo de usuarios -->
                     <li class="nav-item">
-                        <a href="Unidad.jsp" class="nav-link text-white">
-                            <i class="bi bi-building me-2"></i> Unidades
+                        <a href="Usuarios.jsp" class="nav-link text-white">
+                            <i class="bi bi-people me-2"></i> Usuarios
                         </a>
                     </li>
-                    
+
                     <!-- Agrega más opciones si las necesitas -->
                 </ul>
+
+                <!-- NUEVO: botón de cerrar sesión al final del menú -->
+                <div class="mt-auto">
+                    <hr class="text-secondary">
+                    <a href="LoginServlet?accion=Logout" class="btn btn-outline-light w-100">
+                        <i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión
+                    </a>
+                </div>
             </nav>
             <!--FIN MENÚ LATERAL-->
 
@@ -99,8 +108,7 @@
 
                             <div class="m-3">
                                 <div class="container-fluid">
-                                    
-                                    
+
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card mb-3">
@@ -117,8 +125,7 @@
                                         </div>
                                     </div>
 
-                                    
-                                    <!<!-- PARA INSTITUCIONES -->
+                                    <!-- PARA INSTITUCIONES -->
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
                                             <div class="card shadow-sm">
@@ -140,23 +147,22 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        
-                                        <!<!-- PARA UNIDADES -->
 
+                                        <!-- PARA UNIDADES -->
                                         <div class="col-md-4 mb-3">
                                             <div class="card shadow-sm">
                                                 <div class="card-body">
                                                     <div class="d-flex align-items-center">
                                                         <div class="me-3">
-                                                            <i class="bi-diagram-3 fs-1 text-success"></i>
+                                                            <!-- corregido icono -->
+                                                            <i class="bi bi-diagram-3 fs-1 text-success"></i>
                                                         </div>
                                                         <div>
                                                             <h5 class="card-title mb-1">Unidades</h5>
                                                             <p class="card-text small text-muted">
                                                                 Gestiona las unidades registradas.
                                                             </p>
-                                                            <a href="Unidad.jsp" class="btn btn-sm btn-outline-success">
+                                                            <a href="Personas.jsp" class="btn btn-sm btn-outline-success">
                                                                 Ir al módulo
                                                             </a>
                                                         </div>
@@ -165,8 +171,7 @@
                                             </div>
                                         </div>
 
-                                        <!--libre para futuras secciones -->
-                                        
+                                        <!-- libre para futuras secciones -->
 
                                     </div>
 
