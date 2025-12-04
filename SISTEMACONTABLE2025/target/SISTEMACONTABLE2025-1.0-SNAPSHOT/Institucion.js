@@ -15,6 +15,9 @@ $(function () {
         $("#opcion").val("si_registro");
         $("#tituloModal").text("Registrar Institución");
 
+        $("#grupo_codigo").show();
+        $("#txt_id").val("");
+
         $("#modalInstitucion").modal("show");
     });
 
@@ -71,6 +74,8 @@ $(function () {
                 $("#opcion").val("si_actualizo");
                 $("#txt_id").val(json[0].ID);
                 $("#txt_nombre").val(json[0].NOMBRE);
+
+                $("#grupo_codigo").hide();
 
                 $("#tituloModal").text("Editar Institución");
                 $("#modalInstitucion").modal("show");

@@ -71,6 +71,7 @@ public class RegInstitucion extends HttpServlet{
                         .append("class='display nowrap table table-striped align-middle' style='width:100%'>");
 
                     html.append("<thead><tr>")
+                        .append("<th>Código Institución</th>")    
                         .append("<th>Nombre</th>")
                         .append("<th class='text-center'>Acciones</th>")
                         .append("</tr></thead>");
@@ -80,6 +81,7 @@ public class RegInstitucion extends HttpServlet{
                     for (Institucion inst : listaInstituciones) {
 
                         html.append("<tr>")
+                            .append("<td>").append(nvl(inst.getId())).append("</td>")    
                             .append("<td>").append(nvl(inst.getNombre())).append("</td>")
                             .append("<td class='text-center'>")
                             .append("<div class='btn-group'>")
@@ -116,6 +118,7 @@ public class RegInstitucion extends HttpServlet{
                     dao = new Institucion_DAO();
                     institucion = new Institucion();
 
+                    institucion.setId(Integer.parseInt(req.getParameter("txt_id")));
                     institucion.setNombre(req.getParameter("txt_nombre"));
 
                     String r = dao.insertar(institucion);
