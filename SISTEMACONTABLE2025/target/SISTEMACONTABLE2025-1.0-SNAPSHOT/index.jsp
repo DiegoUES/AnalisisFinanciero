@@ -73,19 +73,24 @@
                             <i class="bi bi-house-door me-2"></i> Inicio
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a href="Institucion.jsp" class="nav-link text-white">
                             <i class="bi bi-building me-2"></i> Instituciones
                         </a>
                     </li>
-                    
-                    <li class="nav-item">
-                        <a href="Unidad.jsp" class="nav-link text-white">
-                            <i class="bi bi-building me-2"></i> Unidades
+                     <li class="nav-item">
+                        <a href="Usuarios.jsp" class="nav-link text-white">
+                            <i class="bi bi-building me-2"></i> Usuarios
                         </a>
                     </li>
-                    
+                    <!-- Nuevo: enlace al módulo de activos -->
+                    <li class="nav-item">
+                        <a href="DepreciacionActivo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Depreciacion
+                        </a>
+                    </li>
+
                     <!-- Agrega más opciones si las necesitas -->
                 </ul>
             </nav>
@@ -99,8 +104,8 @@
 
                             <div class="m-3">
                                 <div class="container-fluid">
-                                    
-                                    
+
+
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card mb-3">
@@ -117,7 +122,7 @@
                                         </div>
                                     </div>
 
-                                    
+
                                     <!<!-- PARA INSTITUCIONES -->
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
@@ -140,8 +145,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        
+
+
                                         <!<!-- PARA UNIDADES -->
 
                                         <div class="col-md-4 mb-3">
@@ -156,7 +161,7 @@
                                                             <p class="card-text small text-muted">
                                                                 Gestiona las unidades registradas.
                                                             </p>
-                                                            <a href="Unidad.jsp" class="btn btn-sm btn-outline-success">
+                                                            <a href="Personas.jsp" class="btn btn-sm btn-outline-success">
                                                                 Ir al módulo
                                                             </a>
                                                         </div>
@@ -166,7 +171,7 @@
                                         </div>
 
                                         <!--libre para futuras secciones -->
-                                        
+
 
                                     </div>
 

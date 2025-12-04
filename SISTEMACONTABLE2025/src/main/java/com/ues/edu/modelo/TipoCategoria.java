@@ -5,7 +5,7 @@
 package com.ues.edu.modelo;
 /**
  *
- * @author Marlo
+ * @author herna
  */
 public class TipoCategoria {
     private int idTipo;
@@ -39,6 +39,8 @@ public class TipoCategoria {
         this.porcentaje = porcentaje;
     }
     
-    
+     public String getCodigoFormateado() {
+        return String.format("%04d", this.idTipo);
+    }
 }
 
