@@ -1,10 +1,42 @@
 <%-- 
     Document   : ActivoBaja
-    Created on : 1 dic 2025, 10:23:04 a. m.
+    Created on : 1 dic 2025, 10:23:04 a. m.
     Author     : mayel
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    // ==============================
+    // OBTENER ROL DESDE LA SESIÓN
+    // ==============================
+    String rol = "";
+    if (session != null) {
+        Object rolAttr = session.getAttribute("rol");
+        if (rolAttr != null) {
+            rol = rolAttr.toString();
+        } else {
+            Object usuarioAttr = session.getAttribute("usuario");
+            if (usuarioAttr != null) {
+                try {
+                    com.ues.edu.modelo.Usuario u = (com.ues.edu.modelo.Usuario) usuarioAttr;
+                    if (u.getRol() != null && u.getRol().getNombre() != null) {
+                        rol = u.getRol().getNombre();
+                    }
+                } catch (Exception e) {
+                    // Si falla el cast, rol queda vacío
+                }
+            }
+        }
+    }
+
+    boolean esAdmin = "ADMIN".equalsIgnoreCase(rol) || "ADMINISTRADOR".equalsIgnoreCase(rol);
+
+    // Solo ADMIN puede entrar a ActivoBaja.jsp
+    if (!esAdmin) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -76,7 +108,7 @@
 
     <body>
 
-        <!<!-- AQUI COMIENZA EL MENÚ LATERAL -->
+        <!-- AQUI COMIENZA EL MENÚ LATERAL -->
         <div class="layout-wrapper">
 
             <!--MENÚ LATERAL-->
@@ -94,6 +126,13 @@
                         </a>
                     </li>
 
+                    <!-- Solo ADMIN ve Usuarios -->
+                    <li class="nav-item">
+                        <a href="Usuarios.jsp" class="nav-link text-white">
+                            <i class="bi bi-building me-2"></i> Usuarios
+                        </a>
+                    </li>
+
                     <li class="nav-item">
                         <a href="Institucion.jsp" class="nav-link text-white">
                             <i class="bi bi-building me-2"></i> Instituciones
@@ -101,13 +140,40 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="Activo.jsp" class="nav-link active">
-                            <i class="bi bi-box-seam me-2"></i> Activo Fijo
+                        <a href="Activo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Activo Fijo
                         </a>
                     </li>
+
+                    <!-- Activo Baja (página actual) -->
                     <li class="nav-item">
-                        <a href="ActivoBaja.jsp" class="nav-link">
-                            <i class="bi bi-box-arrow-down me-2"></i> Activos de Baja
+                        <a href="ActivoBaja.jsp" class="nav-link active">
+                            <i class="bi bi-box-seam me-2"></i>Activo Baja
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="DepreciacionActivo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Depreciacion
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="TipoCategoria.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Categoria
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="TipoUsado.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Usado
+                        </a>
+                    </li>
+
+                    <!-- Solo ADMIN ve Unidad -->
+                    <li class="nav-item">
+                        <a href="Unidad.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Unidad
                         </a>
                     </li>
                 </ul>
@@ -130,29 +196,24 @@
                                             </h4>
 
                                             <div class="mb-3 btn-group-activos">
-
                                                 <button type="button"
                                                         id="btn_irAActivoPrincipal"
                                                         class="btn btn-outline-success">
-                                                    <i class="bi bi-arrow-repeat"></i>Ir a Activo Fijo
+                                                    <i class="bi bi-arrow-repeat"></i> Ir a Activo Fijo
                                                 </button>
                                             </div>
-
-
 
                                             <div class="tab-content" id="myTabContent">
                                                 <!-- TABLA ACTIVOS DE BAJA -->
                                                 <div class="tab-pane fade show active" id="baja" role="tabpanel">
                                                     <div id="tablaActivosBaja"></div>
                                                 </div>
-
                                             </div>
 
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
 
                         </div>
                     </div>

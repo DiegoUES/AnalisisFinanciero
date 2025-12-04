@@ -5,6 +5,35 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%
+    // ======================================
+    // OBTENER ROL DE LA SESIÓN (MISMA LÓGICA QUE EN Usuarios.jsp)
+    // ======================================
+    String rol = "";
+    if (session != null) {
+        Object rolAttr = session.getAttribute("rol");
+        if (rolAttr != null) {
+            rol = rolAttr.toString();
+        } else {
+            Object usuarioAttr = session.getAttribute("usuario");
+            if (usuarioAttr != null) {
+                try {
+                    com.ues.edu.modelo.Usuario u = (com.ues.edu.modelo.Usuario) usuarioAttr;
+                    if (u.getRol() != null && u.getRol().getNombre() != null) {
+                        rol = u.getRol().getNombre();
+                    }
+                } catch (Exception e) {
+                    // Si falla el cast, rol se queda vacío
+                }
+            }
+        }
+    }
+
+    boolean esAdmin   = "ADMIN".equalsIgnoreCase(rol) || "ADMINISTRADOR".equalsIgnoreCase(rol);
+    boolean esUsuario = "USUARIO".equalsIgnoreCase(rol) || "USER".equalsIgnoreCase(rol);
+%>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -68,31 +97,82 @@
                 <hr class="text-secondary">
 
                 <ul class="nav nav-pills flex-column mb-auto">
+                    <!-- Inicio (todos los roles) -->
                     <li class="nav-item">
                         <a href="index.jsp" class="nav-link active">
                             <i class="bi bi-house-door me-2"></i> Inicio
                         </a>
                     </li>
 
+                    <!-- Usuarios: SOLO ADMIN -->
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="Usuarios.jsp" class="nav-link text-white">
+                            <i class="bi bi-building me-2"></i> Usuarios
+                        </a>
+                    </li>
+                    <% } %>
+
+                    <!-- Instituciones: ADMIN + USUARIO -->
                     <li class="nav-item">
                         <a href="Institucion.jsp" class="nav-link text-white">
                             <i class="bi bi-building me-2"></i> Instituciones
                         </a>
                     </li>
-                     <li class="nav-item">
-                        <a href="Usuarios.jsp" class="nav-link text-white">
-                            <i class="bi bi-building me-2"></i> Usuarios
+
+                    <!-- Activo Fijo: ADMIN + USUARIO -->
+                    <li class="nav-item">
+                        <a href="Activo.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Activo Fijo
                         </a>
                     </li>
-                    <!-- Nuevo: enlace al módulo de activos -->
+
+                    <!-- Activo Baja: SOLO ADMIN -->
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="ActivoBaja.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Activo Baja
+                        </a>
+                    </li>
+                    <% } %>
+
+                    <!-- Depreciación: ADMIN + USUARIO -->
                     <li class="nav-item">
                         <a href="DepreciacionActivo.jsp" class="nav-link text-white">
                             <i class="bi bi-box-seam me-2"></i>Depreciacion
                         </a>
                     </li>
 
-                    <!-- Agrega más opciones si las necesitas -->
+                    <!-- Tipo Categoria: ADMIN + USUARIO -->
+                    <li class="nav-item">
+                        <a href="TipoCategoria.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Categoria
+                        </a>
+                    </li>
+
+                    <!-- Tipo Usado: ADMIN + USUARIO -->
+                    <li class="nav-item">
+                        <a href="TipoUsado.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Tipo Usado
+                        </a>
+                    </li>
+
+                    <!-- Unidad: SOLO ADMIN -->
+                    <% if (esAdmin) { %>
+                    <li class="nav-item">
+                        <a href="Unidad.jsp" class="nav-link text-white">
+                            <i class="bi bi-box-seam me-2"></i>Unidad
+                        </a>
+                    </li>
+                    <% } %>
                 </ul>
+
+                <!-- BOTÓN CERRAR SESIÓN -->
+                <hr class="text-secondary">
+                <a href="LoginServlet?accion=logout" class="btn btn-outline-light w-100">
+                    <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
+                </a>
+
             </nav>
             <!--FIN MENÚ LATERAL-->
 
@@ -105,7 +185,7 @@
                             <div class="m-3">
                                 <div class="container-fluid">
 
-
+                                    <!-- TARJETA DE BIENVENIDA -->
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card mb-3">
@@ -115,16 +195,19 @@
                                                     </h3>
                                                     <p class="text-muted mb-0">
                                                         Usa el menú lateral para navegar entre los módulos
-                                                        de <strong>Instituciones</strong>, <strong>Unidad</strong> u otros.
+                                                        disponibles según tu rol, como 
+                                                        <strong>Instituciones</strong>, 
+                                                        <strong>Activo Fijo</strong> y otros.
                                                     </p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-
-                                    <!<!-- PARA INSTITUCIONES -->
+                                    <!-- TARJETAS DE ACCESO RÁPIDO -->
                                     <div class="row">
+
+                                        <!-- PARA INSTITUCIONES (ADMIN + USUARIO) -->
                                         <div class="col-md-4 mb-3">
                                             <div class="card shadow-sm">
                                                 <div class="card-body">
@@ -146,22 +229,21 @@
                                             </div>
                                         </div>
 
-
-                                        <!<!-- PARA UNIDADES -->
-
+                                        <!-- PARA UNIDADES (SOLO ADMIN) -->
+                                        <% if (esAdmin) { %>
                                         <div class="col-md-4 mb-3">
                                             <div class="card shadow-sm">
                                                 <div class="card-body">
                                                     <div class="d-flex align-items-center">
                                                         <div class="me-3">
-                                                            <i class="bi-diagram-3 fs-1 text-success"></i>
+                                                            <i class="bi bi-diagram-3 fs-1 text-success"></i>
                                                         </div>
                                                         <div>
                                                             <h5 class="card-title mb-1">Unidades</h5>
                                                             <p class="card-text small text-muted">
                                                                 Gestiona las unidades registradas.
                                                             </p>
-                                                            <a href="Personas.jsp" class="btn btn-sm btn-outline-success">
+                                                            <a href="Unidad.jsp" class="btn btn-sm btn-outline-success">
                                                                 Ir al módulo
                                                             </a>
                                                         </div>
@@ -169,9 +251,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <% } %>
 
-                                        <!--libre para futuras secciones -->
-
+                                        <!-- Espacio libre para futuras secciones -->
 
                                     </div>
 

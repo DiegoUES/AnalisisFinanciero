@@ -8,6 +8,41 @@
 <%@page import="java.util.List"%>
 <%@page import="com.ues.edu.modelo.Activo"%>
 <%@page import="com.ues.edu.modelo.dao.Activo_DAO"%>
+
+<%
+    // ==============================
+    // OBTENER ROL DESDE LA SESIÓN
+    // ==============================
+    String rol = "";
+    if (session != null) {
+        Object rolAttr = session.getAttribute("rol");
+        if (rolAttr != null) {
+            rol = rolAttr.toString();
+        } else {
+            Object usuarioAttr = session.getAttribute("usuario");
+            if (usuarioAttr != null) {
+                try {
+                    com.ues.edu.modelo.Usuario u = (com.ues.edu.modelo.Usuario) usuarioAttr;
+                    if (u.getRol() != null && u.getRol().getNombre() != null) {
+                        rol = u.getRol().getNombre();
+                    }
+                } catch (Exception e) {
+                    // Si falla el cast, rol se queda vacío
+                }
+            }
+        }
+    }
+
+    boolean esAdmin   = "ADMIN".equalsIgnoreCase(rol) || "ADMINISTRADOR".equalsIgnoreCase(rol);
+    boolean esUsuario = "USUARIO".equalsIgnoreCase(rol) || "USER".equalsIgnoreCase(rol);
+
+    // Si no tiene rol válido, lo mandamos al inicio
+    if (!esAdmin && !esUsuario) {
+        response.sendRedirect("index.jsp");
+        return;
+    }
+%>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -102,17 +137,74 @@
         <hr class="text-secondary">
 
         <ul class="nav nav-pills flex-column mb-auto">
+            <!-- Inicio: lo ven todos -->
             <li class="nav-item">
                 <a href="index.jsp" class="nav-link text-white">
                     <i class="bi bi-house-door me-2"></i> Inicio
                 </a>
             </li>
 
+            <!-- Usuarios: SOLO ADMIN -->
+            <% if (esAdmin) { %>
+            <li class="nav-item">
+                <a href="Usuarios.jsp" class="nav-link text-white">
+                    <i class="bi bi-building me-2"></i> Usuarios
+                </a>
+            </li>
+            <% } %>
+
+            <!-- Instituciones: ADMIN y USUARIO -->
             <li class="nav-item">
                 <a href="Institucion.jsp" class="nav-link text-white">
                     <i class="bi bi-building me-2"></i> Instituciones
                 </a>
             </li>
+
+            <!-- Activo Fijo: ADMIN y USUARIO -->
+            <li class="nav-item">
+                <a href="Activo.jsp" class="nav-link text-white">
+                    <i class="bi bi-box-seam me-2"></i>Activo Fijo
+                </a>
+            </li>
+
+            <!-- Activo Baja: SOLO ADMIN -->
+            <% if (esAdmin) { %>
+            <li class="nav-item">
+                <a href="ActivoBaja.jsp" class="nav-link text-white">
+                    <i class="bi bi-box-seam me-2"></i>Activo Baja
+                </a>
+            </li>
+            <% } %>
+
+            <!-- Depreciación: ADMIN y USUARIO (PÁGINA ACTUAL) -->
+            <li class="nav-item">
+                <a href="DepreciacionActivo.jsp" class="nav-link active">
+                    <i class="bi bi-box-seam me-2"></i>Depreciacion
+                </a>
+            </li>
+
+            <!-- Tipo Categoria: ADMIN y USUARIO -->
+            <li class="nav-item">
+                <a href="TipoCategoria.jsp" class="nav-link text-white">
+                    <i class="bi bi-box-seam me-2"></i>Tipo Categoria
+                </a>
+            </li>
+
+            <!-- Tipo Usado: ADMIN y USUARIO -->
+            <li class="nav-item">
+                <a href="TipoUsado.jsp" class="nav-link text-white">
+                    <i class="bi bi-box-seam me-2"></i>Tipo Usado
+                </a>
+            </li>
+
+            <!-- Unidad: SOLO ADMIN -->
+            <% if (esAdmin) { %>
+            <li class="nav-item">
+                <a href="Unidad.jsp" class="nav-link text-white">
+                    <i class="bi bi-box-seam me-2"></i>Unidad
+                </a>
+            </li>
+            <% } %>
         </ul>
     </nav>
     <!-- FIN MENÚ LATERAL -->

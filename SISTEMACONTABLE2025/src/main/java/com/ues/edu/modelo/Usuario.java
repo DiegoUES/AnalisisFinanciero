@@ -3,15 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.ues.edu.modelo;
+
 /**
- *
- * @author Marlo
+ * Modelo de la tabla usuario.
+ * id | nombre | usuario | contraseña | idrol
  */
 public class Usuario {
+
     private int id;
     private String nombre;
     private String usuario;
-    private String contraseña;
+    private String contraseña;   // se guarda encriptada (hash)
     private Roles rol;
 
     public Usuario() {
@@ -56,7 +58,4 @@ public class Usuario {
     public void setRol(Roles rol) {
         this.rol = rol;
     }
-    
-    
 }
-

@@ -1,9 +1,9 @@
 package com.ues.edu.modelo.dao;
 
 import com.ues.edu.conexion.Conexion;
+import com.ues.edu.modelo.Encriptar;
 import com.ues.edu.modelo.Roles;
 import com.ues.edu.modelo.Usuario;
-import com.ues.edu.modelo.Encriptar;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ public class UsuarioDAO {
     }
 
     // ==================== SQL ====================
+
     private static final String SQL_LISTAR =
             "SELECT u.id, u.nombre, u.usuario, u.contraseña, " +
             "       r.idrol, r.nombre AS rol_nombre " +
@@ -65,6 +66,7 @@ public class UsuarioDAO {
     private boolean existeUsuario(String usuario) throws SQLException {
         try (Connection c = conexion.getConexion();
              PreparedStatement ps = c.prepareStatement(SQL_EXISTE_USUARIO)) {
+
             ps.setString(1, usuario);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
@@ -75,6 +77,7 @@ public class UsuarioDAO {
     private boolean existeUsuarioEnOtro(String usuario, int id) throws SQLException {
         try (Connection c = conexion.getConexion();
              PreparedStatement ps = c.prepareStatement(SQL_EXISTE_USUARIO_OTRO)) {
+
             ps.setString(1, usuario);
             ps.setInt(2, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -87,6 +90,7 @@ public class UsuarioDAO {
 
     public List<Usuario> listar() throws SQLException {
         List<Usuario> lista = new ArrayList<>();
+
         try (Connection c = conexion.getConexion();
              PreparedStatement ps = c.prepareStatement(SQL_LISTAR);
              ResultSet rs = ps.executeQuery()) {
@@ -106,13 +110,16 @@ public class UsuarioDAO {
                 lista.add(u);
             }
         }
+
         return lista;
     }
 
     public Usuario obtenerPorId(int id) throws SQLException {
         Usuario u = null;
+
         try (Connection c = conexion.getConexion();
              PreparedStatement ps = c.prepareStatement(SQL_OBTENER)) {
+
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -129,6 +136,7 @@ public class UsuarioDAO {
                 }
             }
         }
+
         return u;
     }
 
@@ -146,13 +154,15 @@ public class UsuarioDAO {
 
         try (Connection c = conexion.getConexion();
              PreparedStatement ps = c.prepareStatement(SQL_INSERTAR)) {
+
             ps.setString(1, u.getNombre());
             ps.setString(2, u.getUsuario());
-            ps.setString(3, u.getContraseña());
+            ps.setString(3, u.getContraseña());    // hash ya calculado
             ps.setInt(4, u.getRol().getIdRol());
 
             int filas = ps.executeUpdate();
             return (filas > 0) ? "ok" : "error_sql";
+
         } catch (SQLException e) {
             e.printStackTrace();
             return "error_sql";
@@ -173,6 +183,7 @@ public class UsuarioDAO {
 
         try (Connection c = conexion.getConexion();
              PreparedStatement ps = c.prepareStatement(SQL_ACTUALIZAR)) {
+
             ps.setString(1, u.getNombre());
             ps.setString(2, u.getUsuario());
             ps.setInt(3, u.getRol().getIdRol());
@@ -180,6 +191,7 @@ public class UsuarioDAO {
 
             int filas = ps.executeUpdate();
             return (filas > 0) ? "ok" : "error_sql";
+
         } catch (SQLException e) {
             e.printStackTrace();
             return "error_sql";
@@ -189,6 +201,7 @@ public class UsuarioDAO {
     public boolean eliminar(int id) throws SQLException {
         try (Connection c = conexion.getConexion();
              PreparedStatement ps = c.prepareStatement(SQL_ELIMINAR)) {
+
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         }
@@ -196,6 +209,7 @@ public class UsuarioDAO {
 
     public List<Roles> listarRoles() throws SQLException {
         List<Roles> roles = new ArrayList<>();
+
         try (Connection c = conexion.getConexion();
              PreparedStatement ps = c.prepareStatement(SQL_LISTAR_ROLES);
              ResultSet rs = ps.executeQuery()) {
@@ -207,6 +221,7 @@ public class UsuarioDAO {
                 roles.add(r);
             }
         }
+
         return roles;
     }
 
@@ -214,13 +229,15 @@ public class UsuarioDAO {
 
     /**
      * Autentica por usuario y contraseña en texto plano.
-     * Devuelve el Usuario con su rol si es válido, o null si falla.
+     * Calcula el hash SHA-256 y lo compara con la columna contraseña.
+     * Devuelve el Usuario (con rol) si es válido, o null si falla.
      */
     public Usuario autenticar(String usuario, String passwordPlano) throws SQLException {
         String hash = Encriptar.getStringMessageDigest(passwordPlano, Encriptar.SHA256);
 
         try (Connection c = conexion.getConexion();
              PreparedStatement ps = c.prepareStatement(SQL_LOGIN)) {
+
             ps.setString(1, usuario);
             ps.setString(2, hash);
 
@@ -230,7 +247,8 @@ public class UsuarioDAO {
                     u.setId(rs.getInt("id"));
                     u.setNombre(rs.getString("nombre"));
                     u.setUsuario(rs.getString("usuario"));
-                    u.setContraseña(null); // no exponemos hash
+                    // No exponemos la contraseña en la app
+                    u.setContraseña(null);
 
                     Roles rol = new Roles();
                     rol.setIdRol(rs.getInt("idrol"));
@@ -241,6 +259,7 @@ public class UsuarioDAO {
                 }
             }
         }
+
         return null;
     }
 }
