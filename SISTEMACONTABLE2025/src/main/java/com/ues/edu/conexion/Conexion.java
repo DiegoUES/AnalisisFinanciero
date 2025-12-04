@@ -19,7 +19,7 @@ public class Conexion {
     private static final PreparedStatement ps = null;
 
     //Cambie el puerto de 5432 a 5434 porque uso postgre 16
-            private static final String jdbcURL = "jdbc:postgresql://localhost:5432/SISTEMAFINANCIERO2025?useSSL=false";
+            private static final String jdbcURL = "jdbc:postgresql://localhost:5434/SISTEMAFINANCIERO2025?useSSL=false";
             private static final String jdbcUsername = "postgres";
             private static final String jdbcPassword = "root"; //CAMBIAR
 

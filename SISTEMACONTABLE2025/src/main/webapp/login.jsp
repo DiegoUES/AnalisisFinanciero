@@ -1,7 +1,10 @@
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-    String ctx = request.getContextPath();
-%>
+<%-- 
+    Document   : Login
+    Created on : 28 nov 2025, 3:28:42 p. m.
+    Author     : Marlo
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,15 +12,10 @@
         <meta charset="UTF-8">
         <title>Iniciar sesión</title>
 
-        <!-- ContextPath para JS (lo usa login.js) -->
-        <script>
-            window.APP_CTX = '<%= ctx %>';
-        </script>
-
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
-        <!-- Parsley (validación de formularios, opcional) -->
+        <!-- Parsley (validación de formularios) -->
         <script src="http://parsleyjs.org/dist/parsley.js"></script>
 
         <!-- SweetAlert2 -->
@@ -39,7 +37,6 @@
                 align-items: center;
                 justify-content: center;
                 background: #f3f4f6;
-                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             }
 
             .login-wrapper {
@@ -63,6 +60,7 @@
     <body>
 
         <div class="login-wrapper px-3">
+
             <div class="card shadow-sm">
                 <div class="card-body">
 
@@ -76,10 +74,9 @@
                         </p>
                     </div>
 
-                    <!-- IMPORTANTE: id y names iguales a los que usa login.js -->
-                    <form id="loginForm"
+                    <form id="form_login"
                           method="post"
-                          autocomplete="off"
+                          action="LoginServlet" 
                           data-parsley-validate>
 
                         <div class="mb-3">
@@ -93,25 +90,22 @@
                                        id="usuario"
                                        name="usuario"
                                        required
-                                       data-parsley-required-message="Ingrese su usuario"
-                                       autocomplete="username">
+                                       data-parsley-required-message="Ingrese su usuario">
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="contrasena" class="form-label">Contraseña</label>
+                            <label for="password" class="form-label">Contraseña</label>
                             <div class="input-group" id="passwordWrapper">
                                 <span class="input-group-text">
                                     <i class="bi bi-lock"></i>
                                 </span>
-                                <!-- name="contrasena" para que tu login.js la tome bien -->
                                 <input type="password"
                                        class="form-control"
-                                       id="contrasena"
-                                       name="contrasena"
+                                       id="password"
+                                       name="password"
                                        required
-                                       data-parsley-required-message="Ingrese su contraseña"
-                                       autocomplete="current-password">
+                                       data-parsley-required-message="Ingrese su contraseña">
                                 <button class="btn btn-outline-secondary" type="button" id="btnTogglePassword">
                                     <i class="bi bi-eye"></i>
                                 </button>
@@ -128,7 +122,7 @@
                         </div>
 
                         <div class="d-grid mb-2">
-                            <button type="submit" id="btnLogin" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar
                             </button>
                         </div>
@@ -138,23 +132,23 @@
                 </div>
 
                 <div class="card-footer text-center small text-muted">
-                    &copy;
-                    <%
+                    &copy; <%
                         try {
                             out.print(java.time.Year.now().getValue());
                         } catch (Exception e) {
                             out.print("2025");
                         }
-                    %> Sistema Contable 2025
+                    %> Sistema de Gestión
                 </div>
             </div>
+
         </div>
 
         <script>
             $(function () {
-                // Mostrar/ocultar contraseña (usa #contrasena, no cambié el name)
+                // Mostrar/ocultar contraseña
                 $('#btnTogglePassword').on('click', function () {
-                    const input = $('#contrasena');
+                    const input = $('#password');
                     const icon = $(this).find('i');
 
                     if (input.attr('type') === 'password') {
@@ -166,10 +160,10 @@
                     }
                 });
 
-                // Activar Parsley si lo quieres usar
-                $('#loginForm').parsley();
+                // Validación con Parsley
+                $('#form_login').parsley();
 
-                // Si algún día devuelves error/mensaje en atributos JSP:
+                // Mostrar mensaje de error desde el servidor (si existe)
                 <% 
                     String error = (String) request.getAttribute("error");
                     String mensaje = (String) request.getAttribute("mensaje");
@@ -189,9 +183,6 @@
                 <% } %>
             });
         </script>
-
-        <!-- Tu JS de login con AJAX / roles -->
-        <script src="<%= ctx %>/login.js"></script>
 
     </body>
 </html>

@@ -8,14 +8,19 @@ $(function () {
     $(document).on("click", "#btn_nuevo_tipo", function (e) {
         e.preventDefault();
         console.log("Click en btn_nuevo_tipo");
-
+        $("#txt_codigo").closest('.col-md-4').show(); // Oculta toda la columna del código
+            $("#txt_porcentaje").closest('.row').show(); // Oculta la fila del porcentaje
+            
+            // También ocultar las etiquetas si están en el mismo div
+            $("#txt_codigo").prev('label').show();
+            $("#txt_porcentaje").prev('label').show();
         $("#form_tipo_activo").trigger("reset");
         $("#opcion").val("si_registro");
         $("#tituloModal").text("Registrar Tipo de Activo");
         
         // Limpiar campo id oculto
         $("#txt_id").val("");
-
+        
         $("#modalTipoActivo").modal("show");
     });
 
@@ -152,6 +157,13 @@ $(function () {
                 $("#txt_codigo").val(json[0].CODIGO); // Código formateado "0001"
                 $("#txt_nombre").val(json[0].NOMBRE);
                 $("#txt_porcentaje").val(parseFloat(json[0].PORCENTAJE).toFixed(2));
+                
+                $("#txt_codigo").closest('.col-md-4').hide(); // Oculta toda la columna del código
+            $("#txt_porcentaje").closest('.row').hide(); // Oculta la fila del porcentaje
+            
+            // También ocultar las etiquetas si están en el mismo div
+            $("#txt_codigo").prev('label').hide();
+            $("#txt_porcentaje").prev('label').hide();
 
                 $("#tituloModal").text("Editar Tipo de Activo");
                 $("#modalTipoActivo").modal("show");
