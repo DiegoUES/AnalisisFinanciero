@@ -104,6 +104,7 @@ public class RegUnidad extends HttpServlet {
                             .append("class='display nowrap table table-striped align-middle' style='width:100%'>");
 
                     html.append("<thead><tr>")
+                            .append("<th>Código Unidad</th>")
                             .append("<th>Nombre Unidad</th>")
                             .append("<th>Nombre Institución</th>")
                             .append("<th class='text-center'>Acciones</th>")
@@ -114,6 +115,7 @@ public class RegUnidad extends HttpServlet {
                     for (Unidad uni : listaUnidades) {
 
                         html.append("<tr>")
+                                .append("<td>").append(nvl(uni.getId())).append("</td>")
                                 .append("<td>").append(nvl(uni.getNombre())).append("</td>")
                                 .append("<td>").append(nvl(uni.getInstitucion().getNombre())).append("</td>")
                                 .append("<td class='text-center'>")
@@ -149,6 +151,8 @@ public class RegUnidad extends HttpServlet {
                 try {
                     dao = new Unidad_DAO();
                     unidad = new Unidad();
+                    
+                    unidad.setId(Integer.parseInt(req.getParameter("txt_id")));
 
                     unidad.setNombre(req.getParameter("txt_nombre"));
 

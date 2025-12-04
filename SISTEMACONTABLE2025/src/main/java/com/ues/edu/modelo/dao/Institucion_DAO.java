@@ -25,7 +25,7 @@ public class Institucion_DAO {
 
     // SQL
     private static final String SQL_MOSTRAR = "SELECT id, nombre FROM institucion";
-    private static final String SQL_INSERTAR = "INSERT INTO institucion (nombre) VALUES (?)";
+    private static final String SQL_INSERTAR = "INSERT INTO institucion (id,nombre) VALUES (?,?)";
     private static final String SQL_MODIFICAR = "UPDATE institucion SET nombre = ? WHERE id = ?";
 
 
@@ -57,7 +57,8 @@ public class Institucion_DAO {
         try (Connection cn = conexion.getConexion();
              PreparedStatement ps = cn.prepareStatement(SQL_INSERTAR)) {
 
-            ps.setString(1, inst.getNombre());
+            ps.setInt(1, inst.getId());
+            ps.setString(2, inst.getNombre());
 
             int resultado_insertar = ps.executeUpdate();
             resultado = (resultado_insertar > 0) ? "exito" : "error_insertar_institucion";

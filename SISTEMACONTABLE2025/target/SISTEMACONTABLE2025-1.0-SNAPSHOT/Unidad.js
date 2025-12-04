@@ -19,6 +19,9 @@ $(function () {
         $("#grupo_nombre_unidad").show();
         $("#nombre").prop("disabled", false).attr("required", true);
 
+        $("#grupo_codigo").show();
+        $("#txt_id").prop("disabled", false).attr("required", true);
+
 
         // Cargar combo de instituciones
         cargarComboInstitucion();
@@ -77,7 +80,7 @@ $(function () {
 
                 // Cargar datos en el formulario
                 $("#opcion").val("si_actualizo");
-                $("#id").val(json[0].ID);
+                $("#txt_id").val(json[0].ID);
                 //$("#nombre").val(json[0].NOMBRE);
 
                 $("#tituloModalUnidad").text("Editar Unidad");
@@ -85,6 +88,15 @@ $(function () {
                 // OCULTAR campo nombre y deshabilitarlo para que Parsley no lo valide
                 $("#grupo_nombre_unidad").hide();
                 $("#nombre").prop("disabled", true).removeAttr("required");
+
+
+
+                $("#grupo_codigo").hide();
+                //$("#txt_id").prop("disabled", true).removeAttr("required");
+                $("#txt_id")
+                        .prop("readonly", true)
+                        .removeAttr("required")
+                        .removeAttr("pattern");
 
 
                 // Cargar combo y seleccionar la institución de la unidad

@@ -111,7 +111,7 @@
                                         <div class="card-body">
 
                                             <h4 class="fw-bold py-3 mb-2">
-                                                <span class="text-muted fw-light">CRUD /</span> Unidades
+                                                <span class="text-muted fw-light">BIENVENIDO A:</span> Unidades
                                             </h4>
 
                                             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -150,13 +150,42 @@
                                             <form id="form_unidad">
 
                                                 <input type="hidden" id="opcion" name="opcion" value="si_registro">
-                                                <input type="hidden" id="id" name="txt_id">
+
+                                                <div class="row" id="grupo_codigo">
+                                                    <div class="col-md-12">
+                                                        <label for="txt_id" class="form-label">Código</label>
+                                                        <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            id="txt_id"
+                                                            name="txt_id"
+                                                            required
+                                                            maxlength="4"
+                                                            pattern="[1-9][0-9]{3}"
+                                                            title="Ingrese un código de 4 dígitos entre 1000 y 9999"
+                                                            oninput="
+                                                            // Dejar solo números
+                                                            this.value = this.value.replace(/[^0-9]/g, '');
+                                                            // Quitar ceros a la izquierda
+                                                            this.value = this.value.replace(/^0+/, '');
+                                                            // Limitar a 4 dígitos
+                                                            if (this.value.length > 4) {
+                                                            this.value = this.value.slice(0, 4);
+                                                            }
+                                                            "
+                                                            >
+                                                    </div>
+                                                </div>
+
+
 
                                                 <div class="row mb-3" id="grupo_nombre_unidad">
                                                     <div class="col-md-12">
                                                         <label for="txt_nombre" class="form-label">Nombre unidad</label>
                                                         <input type="text" class="form-control"
-                                                               id="nombre" name="txt_nombre" required>
+                                                               id="nombre" name="txt_nombre" required
+                                                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                                                               title="Solo se permiten letras y espacios">
                                                     </div>
                                                 </div>
 

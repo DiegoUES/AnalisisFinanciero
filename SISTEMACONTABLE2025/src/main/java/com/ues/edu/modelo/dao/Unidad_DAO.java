@@ -29,7 +29,7 @@ public class Unidad_DAO {
             + "FROM unidad u \n"
             + "INNER JOIN institucion i ON i.id = u.idinstitucion";
 
-    private static final String SQL_INSERTAR = "INSERT INTO unidad (nombre, idinstitucion) VALUES (?, ?)";
+    private static final String SQL_INSERTAR = "INSERT INTO unidad (idunidad,nombre, idinstitucion) VALUES (?,?, ?)";
 
     private static final String SQL_MODIFICAR = "UPDATE unidad SET idinstitucion = ? WHERE idunidad = ?";
 
@@ -91,8 +91,9 @@ public class Unidad_DAO {
 
         try (Connection cn = conexion.getConexion(); PreparedStatement ps = cn.prepareStatement(SQL_INSERTAR)) {
 
-            ps.setString(1, unidad.getNombre());
-            ps.setObject(2, unidad.getInstitucion().getId());
+            ps.setInt(1, unidad.getId());
+            ps.setString(2, unidad.getNombre());
+            ps.setObject(3, unidad.getInstitucion().getId());
 
             int resultado_insertar = ps.executeUpdate();
             resultado = (resultado_insertar > 0) ? "exito" : "error_insertar_unidad";
